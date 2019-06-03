@@ -16,7 +16,8 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "thecodingmachine/safe": "^0.1.13"
+        "thecodingmachine/safe": "^0.1.13",
+        "wernerdweight/enhanced-exception": "^1.0"
     },
     "require-dev": {
         "wernerdweight/cs": "^1.2.1",

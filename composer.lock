@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "85b31a59ad7896ae947a5cae4851391f",
+    "content-hash": "cdbc26b1704d336db05a3e946d53892b",
     "packages": [
         {
             "name": "thecodingmachine/safe",
@@ -137,6 +137,53 @@
             ],
             "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
             "time": "2019-04-17T16:09:50+00:00"
+        },
+        {
+            "name": "wernerdweight/enhanced-exception",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wernerdweight/EnhancedException.git",
+                "reference": "775aae8a223f221ceaf7e69e1f7925c41a280ddb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wernerdweight/EnhancedException/zipball/775aae8a223f221ceaf7e69e1f7925c41a280ddb",
+                "reference": "775aae8a223f221ceaf7e69e1f7925c41a280ddb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0",
+                "thecodingmachine/safe": "^0.1.13"
+            },
+            "require-dev": {
+                "thecodingmachine/phpstan-safe-rule": "^0.1.3",
+                "wernerdweight/cs": "^1.2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WernerDweight\\EnhancedException\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Werner Dweight Solutions",
+                    "email": "info@wds.blue"
+                }
+            ],
+            "description": "Generic enhanced exception to be used in other projects",
+            "homepage": "https://github.com/wernerdweight/EnhancedException",
+            "keywords": [
+                "Enhanced",
+                "exception",
+                "generic"
+            ],
+            "time": "2019-06-01T10:27:50+00:00"
         }
     ],
     "packages-dev": [
