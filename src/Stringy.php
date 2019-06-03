@@ -406,11 +406,14 @@ class Stringy
     /**
      * Format a number with grouped thousands.
      *
-     * @return string
+     * @param int $decimals
+     * @param string $decimalPoint
+     * @param string $thousandsSeparator
+     * @return Stringy
      */
-    public function number_format()
+    public function numberFormat(int $decimals = 0, string $decimalPoint = '.', string $thousandsSeparator = ','): self
     {
-        return number_format($this->string);
+        $this->string = number_format($this->string, $decimals, $decimalPoint, $thousandsSeparator);
         return $this;
     }
 
@@ -421,6 +424,7 @@ class Stringy
      */
     public function ord()
     {
+        // TODO:
         return ord($this->string);
         return $this;
     }
@@ -428,263 +432,259 @@ class Stringy
     /**
      * Parses the string into variables.
      */
-    public function parse_str()
+    public function parseIntoVariables(): array
     {
-        return parse_str($this->string);
-        return $this;
-    }
-
-    /**
-     * Output a string.
-     *
-     * @return int
-     */
-    public function print()
-    {
-        return print $this->string;
-        return $this;
+        $variables = [];
+        parse_str($this->string, $variables);
+        return $variables;
     }
 
     /**
      * Output a formatted string.
      *
-     * @return int
+     * @param mixed ...$args
+     * @return Stringy
      */
-    public function printf()
+    public function printf(...$args): self
     {
-        return printf($this->string);
+        $this->string = printf($this->string, ...$args);
         return $this;
     }
 
     /**
      * Convert a quoted-printable string to an 8 bit string.
      *
-     * @return string
+     * @return Stringy
      */
-    public function quoted_printable_decode()
+    public function decodeQuotedPrintable(): self
     {
-        return quoted_printable_decode($this->string);
+        $this->string = quoted_printable_decode($this->string);
         return $this;
     }
 
     /**
      * Convert a 8 bit string to a quoted-printable string.
      *
-     * @return string
+     * @return Stringy
      */
-    public function quoted_printable_encode()
+    public function encodeQuotedPrintable(): self
     {
-        return quoted_printable_encode($this->string);
+        $this->string = quoted_printable_encode($this->string);
         return $this;
     }
 
     /**
      * Quote meta characters.
      *
-     * @return string
+     * @return Stringy
      */
-    public function quotemeta()
+    public function quoteMetaCharacters(): self
     {
-        return quotemeta($this->string);
+        $this->string = quotemeta($this->string);
         return $this;
     }
 
     /**
      * Strip whitespace (or other characters) from the end of a string.
      *
-     * @return string
+     * @param string $charlist
+     * @return Stringy
      */
-    public function rtrim()
+    public function trimRight(string $charlist = " \t\n\r\0\x0B"): self
     {
-        return rtrim($this->string);
-        return $this;
-    }
-
-    /**
-     * Calculate the sha1 hash of a file.
-     *
-     * @return string
-     */
-    public function sha1_file()
-    {
-        return sha1_file($this->string);
+        $this->string = rtrim($this->string, $charlist);
         return $this;
     }
 
     /**
      * Calculate the sha1 hash of a string.
      *
-     * @return string
+     * @param bool|null $rawOutput
+     * @return Stringy
      */
-    public function sha1()
+    public function sha1(?bool $rawOutput = null): self
     {
-        return sha1($this->string);
+        return sha1($this->string, $rawOutput);
         return $this;
     }
 
     /**
      * Calculate the similarity between two strings.
      *
+     * @param string $comparison
      * @return int
      */
-    public function similar_text()
+    public function getNumberOfSameCharacters(string $comparison): int
     {
-        return similar_text($this->string);
-        return $this;
+        return similar_text($this->string, $comparison);
     }
 
     /**
      * Calculate the soundex key of a string.
      *
-     * @return string
+     * @return Stringy
      */
-    public function soundex()
+    public function soundex(): self
     {
-        return soundex($this->string);
+        $this->string = soundex($this->string);
         return $this;
     }
 
     /**
      * Return a formatted string.
      *
-     * @return string
+     * @param mixed ...$args
+     * @return Stringy
+     * @throws StringsException
      */
-    public function sprintf()
+    public function sprintf(...$args): self
     {
-        return sprintf($this->string);
-        return $this;
-    }
-
-    /**
-     * Parses input from a string according to a format.
-     *
-     * @return mixed
-     */
-    public function sscanf()
-    {
-        return sscanf($this->string);
+        $this->string = \Safe\sprintf($this->string, ...$args);
         return $this;
     }
 
     /**
      * Parse a CSV string into an array.
      *
+     * @param string $delimiter
+     * @param string $enclosure
+     * @param string $escape
      * @return array
      */
-    public function str_getcsv()
+    public function getCsv(string $delimiter = ',', string $enclosure = '"', string $escape = "\\"): array
     {
-        return str_getcsv($this->string);
-        return $this;
+        return str_getcsv($this->string, $delimiter, $enclosure, $escape);
     }
 
     /**
      * Case-insensitive version of str_replace.
      *
-     * @return mixed
+     * @param string|string[] $search
+     * @param string|string[] $replace
+     * @return Stringy
      */
-    public function str_ireplace()
+    public function replaceCaseInsensitive($search, $replace): self
     {
-        return str_ireplace($this->string);
+        $this->string = str_ireplace($search, $replace, $this->string);
         return $this;
     }
 
     /**
      * Pad a string to a certain length with another string.
      *
-     * @return string
+     * @param int $length
+     * @param string $padString
+     * @return Stringy
      */
-    public function str_pad()
+    public function padLeft(int $length, string $padString = ' '): self
     {
-        return str_pad($this->string);
+        $this->string = str_pad($this->string, $length, $padString, STR_PAD_LEFT);
+        return $this;
+    }
+
+    /**
+     * Pad a string to a certain length with another string.
+     *
+     * @param int $length
+     * @param string $padString
+     * @return Stringy
+     */
+    public function padRight(int $length, string $padString = ' '): self
+    {
+        $this->string = str_pad($this->string, $length, $padString, STR_PAD_RIGHT);
+        return $this;
+    }
+
+    /**
+     * Pad a string to a certain length with another string.
+     *
+     * @param int $length
+     * @param string $padString
+     * @return Stringy
+     */
+    public function padBoth(int $length, string $padString = ' '): self
+    {
+        $this->string = str_pad($this->string, $length, $padString, STR_PAD_BOTH);
         return $this;
     }
 
     /**
      * Repeat a string.
      *
-     * @return string
+     * @param int $multiplier
+     * @return Stringy
      */
-    public function str_repeat()
+    public function repeat(int $multiplier): self
     {
-        return str_repeat($this->string);
+        $this->string = str_repeat($this->string, $multiplier);
         return $this;
     }
 
     /**
      * Replace all occurrences of the search string with the replacement string.
      *
-     * @return mixed
+     * @param string|string[] $search
+     * @param string|string[] $replace
+     * @return Stringy
      */
-    public function str_replace()
+    public function replace($search, $replace): self
     {
-        return str_replace($this->string);
+        $this->string = str_replace($search, $replace, $this->string);
         return $this;
     }
 
     /**
      * Perform the rot13 transform on a string.
      *
-     * @return string
+     * @return Stringy
      */
-    public function str_rot13()
+    public function rot13(): self
     {
-        return str_rot13($this->string);
+        $this->string = str_rot13($this->string);
         return $this;
     }
 
     /**
      * Randomly shuffles a string.
      *
-     * @return string
+     * @return Stringy
      */
-    public function str_shuffle()
+    public function shuffle(): self
     {
-        return str_shuffle($this->string);
+        $this->string = str_shuffle($this->string);
         return $this;
     }
 
     /**
      * Convert a string to an array.
      *
-     * @return array
+     * @return string[]
      */
-    public function str_split()
+    public function split(int $length = 1): array
     {
-        return str_split($this->string);
-        return $this;
+        return str_split($this->string, $length);
     }
 
     /**
      * Return information about words used in a string.
      *
-     * @return mixed
+     * @param string|null $charlist
+     * @return int
      */
-    public function str_word_count()
+    public function getWordCount(?string $charlist = null): int
     {
-        return str_word_count($this->string);
-        return $this;
+        return str_word_count($this->string, null, $charlist);
     }
 
     /**
      * Binary safe case-insensitive string comparison.
      *
-     * @return int|\lt
+     * @param string $comparison
+     * @return int
      */
-    public function strcasecmp()
+    public function compareCaseInsensitive(string $comparison): int
     {
-        return strcasecmp($this->string);
-        return $this;
-    }
-
-    /**
-     * Alias of strstr.
-     *
-     * @return string
-     */
-    public function strchr()
-    {
-        return strchr($this->string);
-        return $this;
+        return strcasecmp($this->string, $comparison);
     }
 
     /**
