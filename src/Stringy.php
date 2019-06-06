@@ -7,7 +7,7 @@ use Safe\Exceptions\PcreException;
 use Safe\Exceptions\StringsException;
 use WernerDweight\Stringy\Exception\StringyException;
 
-class Stringy
+final class Stringy
 {
     /** @var string */
     public const BASE_BIN = 'bin';
