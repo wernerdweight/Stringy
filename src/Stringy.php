@@ -1412,7 +1412,9 @@ class Stringy
      */
     public function preg_replace_callback(string $pattern, callable $callback, int $limit = -1): self
     {
-        $this->string = preg_replace_callback($pattern, $callback, $this->string, $limit);
+        /** @var string $replacedString */
+        $replacedString = preg_replace_callback($pattern, $callback, $this->string, $limit);
+        $this->string = $replacedString;
         return $this;
     }
 
@@ -1421,13 +1423,16 @@ class Stringy
      *
      * @param string $pattern
      * @param string $replacement
-     * @param int    $limit
+     * @param int $limit
      *
      * @return Stringy
+     * @throws PcreException
      */
     public function pregReplace(string $pattern, string $replacement, int $limit = -1): self
     {
-        $this->string = preg_replace($pattern, $replacement, $this->string, $limit);
+        /** @var string $replacedString */
+        $replacedString = \Safe\preg_replace($pattern, $replacement, $this->string, $limit);
+        $this->string = $replacedString;
         return $this;
     }
 
@@ -1435,13 +1440,14 @@ class Stringy
      * Split string by a regular expression.
      *
      * @param string $pattern
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
+     * @throws PcreException
      */
     public function pregSplit(string $pattern, int $limit = -1): array
     {
-        return preg_split($pattern, $this->string, $limit);
+        return \Safe\preg_split($pattern, $this->string, $limit);
     }
 
     // extra functions
@@ -1457,9 +1463,11 @@ class Stringy
 
         $position = 0;
         $positions = [];
-        while (false !== ($position = $this->getPositionOfSubstring((string)$substring, $position))) {
+        $position = $this->getPositionOfSubstring((string)$substring, $position);
+        while (null !== $position) {
             $positions[] = $position;
             $position += $substring->length();
+            $position = $this->getPositionOfSubstring((string)$substring, $position);
         }
         return $positions;
     }
@@ -1484,6 +1492,7 @@ class Stringy
             throw new StringyException(StringyException::EXCEPTION_SAME_BASE, [$from]);
         }
 
+        /** @var callable $conversionFunction */
         $conversionFunction = \Safe\sprintf('%s2%s', $from, $to);
         $this->string = $conversionFunction($this->string);
 
