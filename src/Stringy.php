@@ -64,6 +64,7 @@ class Stringy
      * Quote string with slashes in a C style.
      *
      * @param string $charlist
+     *
      * @return Stringy
      */
     public function addCSlashes(string $charlist): self
@@ -87,6 +88,7 @@ class Stringy
      * Convert binary data into hexadecimal representation.
      *
      * @return Stringy
+     *
      * @throws StringsException
      */
     public function convertFromBinToHex(): self
@@ -98,6 +100,7 @@ class Stringy
      * Decodes a hexadecimally encoded binary string.
      *
      * @return Stringy
+     *
      * @throws StringsException
      */
     public function convertFromHexToBin(): self
@@ -118,8 +121,9 @@ class Stringy
     /**
      * Split a string into smaller chunks.
      *
-     * @param int|null $length
+     * @param int|null    $length
      * @param string|null $eol
+     *
      * @return Stringy
      */
     public function chunkSplit(?int $length = null, ?string $eol = null): self
@@ -133,6 +137,7 @@ class Stringy
      *
      * @param string $from
      * @param string $to
+     *
      * @return Stringy
      */
     public function convertCyrillicString(string $from, string $to): self
@@ -167,6 +172,7 @@ class Stringy
      * Return information about characters used in a string.
      *
      * @param int|null $mode
+     *
      * @return mixed
      */
     public function getCharacterStats(?int $mode = null)
@@ -188,6 +194,7 @@ class Stringy
      * One-way string hashing.
      *
      * @param string|null $salt
+     *
      * @return Stringy
      */
     public function crypt(?string $salt = null): self
@@ -199,8 +206,9 @@ class Stringy
     /**
      * Split a string by a string.
      *
-     * @param string $delimiter
+     * @param string   $delimiter
      * @param int|null $limit
+     *
      * @return string[]
      */
     public function explode(string $delimiter, ?int $limit = null): array
@@ -212,6 +220,7 @@ class Stringy
      * Convert logical Hebrew text to visual text.
      *
      * @param int|null $maxCharsPerLine
+     *
      * @return Stringy
      */
     public function hebrevToVisual(?int $maxCharsPerLine = null): self
@@ -224,6 +233,7 @@ class Stringy
      * Convert logical Hebrew text to visual text with newline conversion.
      *
      * @param int|null $maxCharsPerLine
+     *
      * @return Stringy
      */
     public function hebrevToVisualWithNewlineConversion(?int $maxCharsPerLine = null): self
@@ -235,8 +245,9 @@ class Stringy
     /**
      * Convert HTML entities to their corresponding characters.
      *
-     * @param int|null $quoteStyle
+     * @param int|null    $quoteStyle
      * @param string|null $charset
+     *
      * @return Stringy
      */
     public function decodeHtmlEntities(?int $quoteStyle = null, ?string $charset = null): self
@@ -248,9 +259,10 @@ class Stringy
     /**
      * Convert all applicable characters to HTML entities.
      *
-     * @param int|null $quoteStyle
+     * @param int|null    $quoteStyle
      * @param string|null $charset
-     * @param bool $doubleEncode
+     * @param bool        $doubleEncode
+     *
      * @return Stringy
      */
     public function encodeHtmlEntities(
@@ -266,6 +278,7 @@ class Stringy
      * Convert special HTML entities back to characters.
      *
      * @param int|null $quoteStyle
+     *
      * @return Stringy
      */
     public function decodeHtmlSpecialChars(?int $quoteStyle = null): self
@@ -278,8 +291,9 @@ class Stringy
      * Convert special characters to HTML entities.
      *
      * @param int|null $flags
-     * @param string $encoding
-     * @param bool $doubleEncode
+     * @param string   $encoding
+     * @param bool     $doubleEncode
+     *
      * @return Stringy
      */
     public function encodeHtmlSpecialChars(
@@ -305,10 +319,11 @@ class Stringy
     /**
      * Calculate Levenshtein distance between two strings.
      *
-     * @param string $comparison
+     * @param string   $comparison
      * @param int|null $costOfInsertion
      * @param int|null $costOfReplacement
      * @param int|null $costOfDeletion
+     *
      * @return int
      */
     public function levenshtein(
@@ -324,6 +339,7 @@ class Stringy
      * Strip whitespace (or other characters) from the beginning of a string.
      *
      * @param string $charlist
+     *
      * @return Stringy
      */
     public function trimLeft(string $charlist = " \t\n\r\0\x0B"): self
@@ -336,6 +352,7 @@ class Stringy
      * Calculate the md5 hash of a string.
      *
      * @param bool|null $rawOutput
+     *
      * @return Stringy
      */
     public function md5(?bool $rawOutput = null): self
@@ -348,6 +365,7 @@ class Stringy
      * Calculate the metaphone key of a string.
      *
      * @param int $phonemes
+     *
      * @return Stringy
      */
     public function metaphone(int $phonemes = 0): self
@@ -360,6 +378,7 @@ class Stringy
      * Formats a number as a currency string.
      *
      * @param string $format
+     *
      * @return Stringy
      */
     public function moneyFormat(string $format): self
@@ -372,6 +391,7 @@ class Stringy
      * Inserts HTML line breaks before all newlines in a string.
      *
      * @param bool $isXml
+     *
      * @return Stringy
      */
     public function newlineToBreakElement(bool $isXml = true): self
@@ -383,9 +403,10 @@ class Stringy
     /**
      * Format a number with grouped thousands.
      *
-     * @param int $decimals
+     * @param int    $decimals
      * @param string $decimalPoint
      * @param string $thousandsSeparator
+     *
      * @return Stringy
      */
     public function numberFormat(int $decimals = 0, string $decimalPoint = '.', string $thousandsSeparator = ','): self
@@ -408,6 +429,7 @@ class Stringy
      * Output a formatted string.
      *
      * @param mixed ...$args
+     *
      * @return Stringy
      */
     public function printf(...$args): self
@@ -453,6 +475,7 @@ class Stringy
      * Strip whitespace (or other characters) from the end of a string.
      *
      * @param string $charlist
+     *
      * @return Stringy
      */
     public function trimRight(string $charlist = " \t\n\r\0\x0B"): self
@@ -465,6 +488,7 @@ class Stringy
      * Calculate the sha1 hash of a string.
      *
      * @param bool|null $rawOutput
+     *
      * @return Stringy
      */
     public function sha1(?bool $rawOutput = null): self
@@ -477,6 +501,7 @@ class Stringy
      * Calculate the similarity between two strings.
      *
      * @param string $comparison
+     *
      * @return int
      */
     public function getNumberOfSameCharacters(string $comparison): int
@@ -499,7 +524,9 @@ class Stringy
      * Return a formatted string.
      *
      * @param mixed ...$args
+     *
      * @return Stringy
+     *
      * @throws StringsException
      */
     public function sprintf(...$args): self
@@ -514,9 +541,10 @@ class Stringy
      * @param string $delimiter
      * @param string $enclosure
      * @param string $escape
+     *
      * @return array
      */
-    public function getCsv(string $delimiter = ',', string $enclosure = '"', string $escape = "\\"): array
+    public function getCsv(string $delimiter = ',', string $enclosure = '"', string $escape = '\\'): array
     {
         return str_getcsv($this->string, $delimiter, $enclosure, $escape);
     }
@@ -526,6 +554,7 @@ class Stringy
      *
      * @param string|string[] $search
      * @param string|string[] $replace
+     *
      * @return Stringy
      */
     public function replaceCaseInsensitive($search, $replace): self
@@ -537,8 +566,9 @@ class Stringy
     /**
      * Pad a string to a certain length with another string.
      *
-     * @param int $length
+     * @param int    $length
      * @param string $padString
+     *
      * @return Stringy
      */
     public function padLeft(int $length, string $padString = ' '): self
@@ -550,8 +580,9 @@ class Stringy
     /**
      * Pad a string to a certain length with another string.
      *
-     * @param int $length
+     * @param int    $length
      * @param string $padString
+     *
      * @return Stringy
      */
     public function padRight(int $length, string $padString = ' '): self
@@ -563,8 +594,9 @@ class Stringy
     /**
      * Pad a string to a certain length with another string.
      *
-     * @param int $length
+     * @param int    $length
      * @param string $padString
+     *
      * @return Stringy
      */
     public function padBoth(int $length, string $padString = ' '): self
@@ -577,6 +609,7 @@ class Stringy
      * Repeat a string.
      *
      * @param int $multiplier
+     *
      * @return Stringy
      */
     public function repeat(int $multiplier): self
@@ -590,6 +623,7 @@ class Stringy
      *
      * @param string|string[] $search
      * @param string|string[] $replace
+     *
      * @return Stringy
      */
     public function replace($search, $replace): self
@@ -624,6 +658,7 @@ class Stringy
      * Convert a string to an array.
      *
      * @param int $length
+     *
      * @return string[]
      */
     public function split(int $length = 1): array
@@ -635,6 +670,7 @@ class Stringy
      * Return information about words used in a string.
      *
      * @param string|null $charlist
+     *
      * @return int
      */
     public function getWordCount(?string $charlist = null): int
@@ -646,6 +682,7 @@ class Stringy
      * Binary safe case-insensitive string comparison.
      *
      * @param string $comparison
+     *
      * @return int
      */
     public function compareCaseInsensitive(string $comparison): int
@@ -657,6 +694,7 @@ class Stringy
      * Binary safe string comparison.
      *
      * @param string $comparison
+     *
      * @return int
      */
     public function compare(string $comparison): int
@@ -668,6 +706,7 @@ class Stringy
      * Locale based string comparison.
      *
      * @param string $comparison
+     *
      * @return int
      */
     public function compareBasedOnLocale(string $comparison): int
@@ -679,6 +718,7 @@ class Stringy
      * Strip HTML and PHP tags from a string.
      *
      * @param string|null $allowableTags
+     *
      * @return Stringy
      */
     public function stripTags(?string $allowableTags = null): self
@@ -701,9 +741,10 @@ class Stringy
     /**
      * Find the position of the first occurrence of a case-insensitive substring in a string.
      *
-     * @param string $substring
-     * @param int|null $offset
+     * @param string      $substring
+     * @param int|null    $offset
      * @param string|null $encoding
+     *
      * @return int
      */
     public function getPositionOfSubstringCaseInsensitive(
@@ -728,9 +769,10 @@ class Stringy
     /**
      * Case-insensitive strstr.
      *
-     * @param string $substring
-     * @param bool|null $beforeNeedle
+     * @param string      $substring
+     * @param bool|null   $beforeNeedle
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function getMatchedSubstringCaseInsensitive(
@@ -746,6 +788,7 @@ class Stringy
      * Get string length.
      *
      * @param string|null $encoding
+     *
      * @return int
      */
     public function length(?string $encoding = null): int
@@ -757,6 +800,7 @@ class Stringy
      * Case insensitive string comparisons using a "natural order" algorithm.
      *
      * @param string $comparison
+     *
      * @return int
      */
     public function compareUsingNaturalOrderCaseInsensitive(string $comparison): int
@@ -768,6 +812,7 @@ class Stringy
      * String comparisons using a "natural order" algorithm.
      *
      * @param string $comparison
+     *
      * @return int
      */
     public function compareUsingNaturalOrder(string $comparison): int
@@ -779,7 +824,8 @@ class Stringy
      * Binary safe case-insensitive string comparison of the first n characters.
      *
      * @param string $comparison
-     * @param int $length
+     * @param int    $length
+     *
      * @return int
      */
     public function compareFirstNCharactersCaseInsensitive(string $comparison, int $length): int
@@ -791,7 +837,8 @@ class Stringy
      * Binary safe string comparison of the first n characters.
      *
      * @param string $comparison
-     * @param int $length
+     * @param int    $length
+     *
      * @return int
      */
     public function compareFirstNCharacters(string $comparison, int $length): int
@@ -803,6 +850,7 @@ class Stringy
      * Search a string for any of a set of characters.
      *
      * @param string $charlist
+     *
      * @return Stringy
      */
     public function searchForAnyOf(string $charlist): self
@@ -814,9 +862,10 @@ class Stringy
     /**
      * Find the position of the first occurrence of a substring in a string.
      *
-     * @param string $substring
-     * @param int $offset
+     * @param string      $substring
+     * @param int         $offset
      * @param string|null $encoding
+     *
      * @return int|null
      */
     public function getPositionOfSubstring(string $substring, int $offset = 0, ?string $encoding = null): ?int
@@ -831,9 +880,10 @@ class Stringy
     /**
      * Find the last occurrence of a character in a string.
      *
-     * @param string $character
-     * @param bool $part
+     * @param string      $character
+     * @param bool        $part
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function getLastOccuranceOfCharacter(string $character, bool $part = false, ?string $encoding = null): self
@@ -845,9 +895,10 @@ class Stringy
     /**
      * Find the last occurrence of a character in a string.
      *
-     * @param string $character
-     * @param bool $part
+     * @param string      $character
+     * @param bool        $part
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function getLastOccuranceOfCharacterCaseInsensitive(
@@ -873,9 +924,10 @@ class Stringy
     /**
      * Find the position of the last occurrence of a case-insensitive substring in a string.
      *
-     * @param string $substring
-     * @param int $offset
+     * @param string      $substring
+     * @param int         $offset
      * @param string|null $encoding
+     *
      * @return int|null
      */
     public function getPositionOfLastSubstringCaseInsensitive(
@@ -893,9 +945,10 @@ class Stringy
     /**
      * Find the position of the last occurrence of a substring in a string.
      *
-     * @param string $substring
-     * @param int $offset
+     * @param string      $substring
+     * @param int         $offset
      * @param string|null $encoding
+     *
      * @return bool|int
      */
     public function getPositionOfLastSubstring(string $substring, int $offset = 0, ?string $encoding = null): ?int
@@ -910,9 +963,10 @@ class Stringy
     /**
      * Find the first occurrence of a string.
      *
-     * @param string $substring
-     * @param bool|null $beforeNeedle
+     * @param string      $substring
+     * @param bool|null   $beforeNeedle
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function getMatchedSubstring(string $substring, ?bool $beforeNeedle = null, ?string $encoding = null): self
@@ -925,6 +979,7 @@ class Stringy
      * Tokenize string.
      *
      * @param string $delimiter
+     *
      * @return Stringy
      */
     public function tokenize(string $delimiter): self
@@ -937,6 +992,7 @@ class Stringy
      * Make a string lowercase.
      *
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function toLowercase(?string $encoding = null): self
@@ -949,6 +1005,7 @@ class Stringy
      * Make a string uppercase.
      *
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function toUppercase(?string $encoding = null): self
@@ -962,6 +1019,7 @@ class Stringy
      *
      * @param string $from
      * @param string $to
+     *
      * @return Stringy
      */
     public function translate(string $from, string $to): self
@@ -973,10 +1031,11 @@ class Stringy
     /**
      * Binary safe comparison of two strings from an offset, up to length characters.
      *
-     * @param string $comparison
-     * @param int $offset
-     * @param int|null $limit
+     * @param string    $comparison
+     * @param int       $offset
+     * @param int|null  $limit
      * @param bool|null $caseInsensitive
+     *
      * @return int
      */
     public function compareWithOffsetAndLimit(
@@ -991,8 +1050,9 @@ class Stringy
     /**
      * Count the number of substring occurrences.
      *
-     * @param string $substring
+     * @param string      $substring
      * @param string|null $encoding
+     *
      * @return int
      */
     public function getNumberOfSubstringOccurances(string $substring, ?string $encoding = null): int
@@ -1003,9 +1063,10 @@ class Stringy
     /**
      * Replace text within a portion of a string.
      *
-     * @param string $replacement
-     * @param int $offset
+     * @param string   $replacement
+     * @param int      $offset
      * @param int|null $limit
+     *
      * @return mixed
      */
     public function replaceSubstring(string $replacement, int $offset, ?int $limit = null): self
@@ -1017,9 +1078,10 @@ class Stringy
     /**
      * Return part of a string.
      *
-     * @param int $offset
-     * @param int|null $limit
+     * @param int         $offset
+     * @param int|null    $limit
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function substring(int $offset, ?int $limit = null, ?string $encoding = null): self
@@ -1032,6 +1094,7 @@ class Stringy
      * Strip whitespace (or other characters) from the beginning and end of a string.
      *
      * @param string $charlist
+     *
      * @return Stringy
      */
     public function trimBoth(string $charlist = " \t\n\r\0\x0B"): self
@@ -1055,6 +1118,7 @@ class Stringy
      * Uppercase the first character of each word in a string.
      *
      * @param string $delimiters
+     *
      * @return Stringy
      */
     public function uppercaseWords(string $delimiters = " \t\r\n\f\v"): self
@@ -1066,9 +1130,10 @@ class Stringy
     /**
      * Wraps a string to a given number of characters.
      *
-     * @param int $width
+     * @param int    $width
      * @param string $break
-     * @param bool $cut
+     * @param bool   $cut
+     *
      * @return Stringy
      */
     public function wordWrap(int $width, string $break = "\n", bool $cut = false): self
@@ -1083,6 +1148,7 @@ class Stringy
      * Check if the string is valid for the specified encoding.
      *
      * @param string|null $encoding
+     *
      * @return bool
      */
     public function checkEncoding(?string $encoding = null): bool
@@ -1093,8 +1159,9 @@ class Stringy
     /**
      * Convert character encoding.
      *
-     * @param string $to
+     * @param string      $to
      * @param string|null $from
+     *
      * @return Stringy
      */
     public function convertEncoding(string $to, ?string $from = null): self
@@ -1107,9 +1174,10 @@ class Stringy
      * Detect character encoding.
      *
      * @param array|null $encodingList
+     *
      * @return string|null
      */
-    public function detectEncoding(array $encodingList = null): ?string
+    public function detectEncoding(?array $encodingList = null): ?string
     {
         return mb_detect_encoding($this->string, $encodingList, true) ?: null;
     }
@@ -1117,8 +1185,9 @@ class Stringy
     /**
      * Regular expression match for multibyte string.
      *
-     * @param string $pattern
+     * @param string      $pattern
      * @param string|null $option
+     *
      * @return bool
      */
     public function eregMatch(string $pattern, ?string $option = null): bool
@@ -1129,9 +1198,10 @@ class Stringy
     /**
      * Perform a regular expression search and replace with multibyte support using a callback.
      *
-     * @param string $pattern
+     * @param string   $pattern
      * @param callable $callback
-     * @param string $option
+     * @param string   $option
+     *
      * @return Stringy
      */
     public function eregReplaceCallback(string $pattern, callable $callback, string $option = 'msr'): self
@@ -1146,6 +1216,7 @@ class Stringy
      * @param string $pattern
      * @param string $replacement
      * @param string $option
+     *
      * @return Stringy
      */
     public function eregReplace(string $pattern, string $replacement, string $option = 'msr'): self
@@ -1157,8 +1228,9 @@ class Stringy
     /**
      * Regular expression match with multibyte support.
      *
-     * @param string $pattern
+     * @param string     $pattern
      * @param array|null $regs
+     *
      * @return int
      */
     public function ereg(string $pattern, ?array $regs = null): int
@@ -1172,6 +1244,7 @@ class Stringy
      * @param string $pattern
      * @param string $replace
      * @param string $option
+     *
      * @return Stringy
      */
     public function eregReplaceCaseInsensitive(string $pattern, string $replace, string $option = 'msr'): self
@@ -1183,8 +1256,9 @@ class Stringy
     /**
      * Regular expression match ignoring case with multibyte support.
      *
-     * @param string $pattern
+     * @param string     $pattern
      * @param array|null $regs
+     *
      * @return int
      */
     public function eregCaseInsensitive(string $pattern, ?array $regs = null): int
@@ -1196,6 +1270,7 @@ class Stringy
      * Replaces ill-formed multi-byte characters with question marks.
      *
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function scrub(?string $encoding = null): self
@@ -1208,7 +1283,8 @@ class Stringy
      * Split multibyte string using regular expression.
      *
      * @param string $pattern
-     * @param int $limit
+     * @param int    $limit
+     *
      * @return string[]
      */
     public function splitByRegularExpression(string $pattern, int $limit = -1): array
@@ -1219,10 +1295,11 @@ class Stringy
     /**
      * Get truncated string with specified width.
      *
-     * @param int $start
-     * @param int $length
-     * @param string $trimmer
+     * @param int         $start
+     * @param int         $length
+     * @param string      $trimmer
      * @param string|null $encoding
+     *
      * @return Stringy
      */
     public function trimToLengthWithTrimmer(
@@ -1239,6 +1316,7 @@ class Stringy
      * Return width of string.
      *
      * @param string|null $encoding
+     *
      * @return int
      */
     public function monotypeWidth(?string $encoding = null): int
@@ -1249,10 +1327,12 @@ class Stringy
     // regular expressions
 
     /**
-     * Perform a regular expression search and replace
+     * Perform a regular expression search and replace.
+     *
      * @param string $pattern
      * @param string $replacement
-     * @param int $limit
+     * @param int    $limit
+     *
      * @return Stringy
      */
     public function pregFilter(string $pattern, string $replacement, int $limit = -1): self
@@ -1262,10 +1342,12 @@ class Stringy
     }
 
     /**
-     * Perform a global regular expression match
+     * Perform a global regular expression match.
+     *
      * @param string $pattern
-     * @param int $flags
-     * @param int $offset
+     * @param int    $flags
+     * @param int    $offset
+     *
      * @return array
      */
     public function pregGetAllMatches(string $pattern, int $flags = PREG_PATTERN_ORDER, int $offset = 0): array
@@ -1276,11 +1358,14 @@ class Stringy
     }
 
     /**
-     * Perform a regular expression match
+     * Perform a regular expression match.
+     *
      * @param string $pattern
-     * @param int $flags
-     * @param int $offset
+     * @param int    $flags
+     * @param int    $offset
+     *
      * @return bool
+     *
      * @throws PcreException
      */
     public function pregMatch(string $pattern, int $flags = 0, int $offset = 0): bool
@@ -1290,8 +1375,10 @@ class Stringy
     }
 
     /**
-     * Quote regular expression characters
+     * Quote regular expression characters.
+     *
      * @param string|null $delimiter
+     *
      * @return Stringy
      */
     public function pregQuote(?string $delimiter = null): self
@@ -1301,9 +1388,11 @@ class Stringy
     }
 
     /**
-     * Perform a regular expression search and replace using callbacks
+     * Perform a regular expression search and replace using callbacks.
+     *
      * @param array $patternsAndCallbacks
-     * @param int $limit
+     * @param int   $limit
+     *
      * @return Stringy
      */
     public function pregReplaceCallbackArray(array $patternsAndCallbacks, int $limit = -1): self
@@ -1313,10 +1402,12 @@ class Stringy
     }
 
     /**
-     * Perform a regular expression search and replace using a callback
-     * @param string $pattern
+     * Perform a regular expression search and replace using a callback.
+     *
+     * @param string   $pattern
      * @param callable $callback
-     * @param int $limit
+     * @param int      $limit
+     *
      * @return Stringy
      */
     public function preg_replace_callback(string $pattern, callable $callback, int $limit = -1): self
@@ -1326,10 +1417,12 @@ class Stringy
     }
 
     /**
-     * Perform a regular expression search and replace
+     * Perform a regular expression search and replace.
+     *
      * @param string $pattern
      * @param string $replacement
-     * @param int $limit
+     * @param int    $limit
+     *
      * @return Stringy
      */
     public function pregReplace(string $pattern, string $replacement, int $limit = -1): self
@@ -1339,9 +1432,11 @@ class Stringy
     }
 
     /**
-     * Split string by a regular expression
+     * Split string by a regular expression.
+     *
      * @param string $pattern
-     * @param int $limit
+     * @param int    $limit
+     *
      * @return array
      */
     public function pregSplit(string $pattern, int $limit = -1): array
@@ -1353,6 +1448,7 @@ class Stringy
 
     /**
      * @param string $substring
+     *
      * @return int[]
      */
     public function getPositionsOfSubstring(string $substring): array
@@ -1361,7 +1457,7 @@ class Stringy
 
         $position = 0;
         $positions = [];
-        while (($position = $this->getPositionOfSubstring((string)$substring, $position)) !== false) {
+        while (false !== ($position = $this->getPositionOfSubstring((string)$substring, $position))) {
             $positions[] = $position;
             $position += $substring->length();
         }
@@ -1371,7 +1467,9 @@ class Stringy
     /**
      * @param string $from
      * @param string $to
+     *
      * @return Stringy
+     *
      * @throws StringsException
      */
     public function convertBase(string $from, string $to): self
@@ -1394,15 +1492,16 @@ class Stringy
 
     /**
      * @param string $from
+     *
      * @return Stringy
      */
     private function toKebab(string $from): self
     {
-        if ($from === self::CASE_SNAKE) {
+        if (self::CASE_SNAKE === $from) {
             return $this->replace('_', '-');
         }
 
-        if ($from === self::CASE_PASCAL) {
+        if (self::CASE_PASCAL === $from) {
             $this->lowercaseFirst();
         }
 
@@ -1412,6 +1511,7 @@ class Stringy
     /**
      * @param string $from
      * @param string $to
+     *
      * @return Stringy
      */
     public function convertCase(string $from, string $to): self
@@ -1426,15 +1526,15 @@ class Stringy
             throw new StringyException(StringyException::EXCEPTION_SAME_CASE, [$from]);
         }
 
-        if ($from !== self::CASE_KEBAB) {
+        if (self::CASE_KEBAB !== $from) {
             $this->toKebab($from);
         }
 
-        if ($to === self::CASE_KEBAB) {
+        if (self::CASE_KEBAB === $to) {
             return $this;
         }
 
-        if ($to === self::CASE_SNAKE) {
+        if (self::CASE_SNAKE === $to) {
             return $this->replace('-', '_');
         }
 
@@ -1445,7 +1545,7 @@ class Stringy
             }
         }
 
-        if ($to === self::CASE_PASCAL) {
+        if (self::CASE_PASCAL === $to) {
             $this->uppercaseFirst();
         }
 
@@ -1454,6 +1554,7 @@ class Stringy
 
     /**
      * @param string $value
+     *
      * @return string
      */
     public function dotNotationToCamelCase(string $value): string
