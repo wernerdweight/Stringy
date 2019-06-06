@@ -115,18 +115,6 @@ class Stringy
     }
 
     /**
-     * TODO:
-     * Generate a single-byte string from a number.
-     *
-     * @return string
-     */
-    public function chr()
-    {
-        return chr($this->string);
-        return $this;
-    }
-
-    /**
      * Split a string into smaller chunks.
      *
      * @param int|null $length
@@ -690,23 +678,23 @@ class Stringy
     /**
      * Binary safe string comparison.
      *
-     * @return int|\lt
+     * @param string $comparison
+     * @return int
      */
-    public function strcmp()
+    public function compare(string $comparison): int
     {
-        return strcmp($this->string);
-        return $this;
+        return strcmp($this->string, $comparison);
     }
 
     /**
      * Locale based string comparison.
      *
-     * @return int|\lt
+     * @param string $comparison
+     * @return int
      */
-    public function strcoll()
+    public function compareBasedOnLocale(string $comparison): int
     {
-        return strcoll($this->string);
-        return $this;
+        return strcoll($this->string, $comparison);
     }
 
     /**
@@ -716,6 +704,7 @@ class Stringy
      */
     public function strcspn()
     {
+        // TODO:
         return strcspn($this->string);
         return $this;
     }
@@ -723,55 +712,59 @@ class Stringy
     /**
      * Strip HTML and PHP tags from a string.
      *
-     * @return string
+     * @param string|null $allowableTags
+     * @return Stringy
      */
-    public function strip_tags()
+    public function stripTags(?string $allowableTags = null): self
     {
-        return strip_tags($this->string);
+        $this->string = strip_tags($this->string, $allowableTags);
         return $this;
     }
 
     /**
      * Un-quote string quoted with addcslashes.
      *
-     * @return string
+     * @return Stringy
      */
-    public function stripcslashes()
+    public function stripCSlashes(): self
     {
-        return stripcslashes($this->string);
+        $this->string = stripcslashes($this->string);
         return $this;
     }
 
     /**
      * Find the position of the first occurrence of a case-insensitive substring in a string.
      *
+     * @param string $substring
+     * @param int|null $offset
      * @return int
      */
-    public function stripos()
+    public function getPositionOfSubstringCaseInsensitive(string $substring, ?int $offset = null): int
     {
-        return stripos($this->string);
-        return $this;
+        return stripos($this->string, $substring, $offset);
     }
 
     /**
      * Un-quotes a quoted string.
      *
-     * @return string
+     * @return Stringy
      */
-    public function stripslashes()
+    public function stripSlashes(): self
     {
-        return stripslashes($this->string);
+        $this->string = stripslashes($this->string);
         return $this;
     }
 
     /**
      * Case-insensitive strstr.
      *
-     * @return string
+     * @param string $substring
+     * @param bool|null $beforeNeedle
+     * @return Stringy
      */
-    public function stristr()
+    public function getMatchedSubstringCaseInsensitive(string $substring, ?bool $beforeNeedle = null): self
     {
-        return stristr($this->string);
+        $this->string = stristr($this->string, $substring, $beforeNeedle);
         return $this;
     }
 
@@ -780,120 +773,138 @@ class Stringy
      *
      * @return int
      */
-    public function strlen()
+    public function length(): int
     {
         return strlen($this->string);
-        return $this;
     }
 
     /**
      * Case insensitive string comparisons using a "natural order" algorithm.
      *
+     * @param string $comparison
      * @return int
      */
-    public function strnatcasecmp()
+    public function compareUsingNaturalOrderCaseInsensitive(string $comparison): int
     {
-        return strnatcasecmp($this->string);
-        return $this;
+        return strnatcasecmp($this->string, $comparison);
     }
 
     /**
      * String comparisons using a "natural order" algorithm.
      *
+     * @param string $comparison
      * @return int
      */
-    public function strnatcmp()
+    public function compareUsingNaturalOrder(string $comparison): int
     {
-        return strnatcmp($this->string);
-        return $this;
+        return strnatcmp($this->string, $comparison);
     }
 
     /**
      * Binary safe case-insensitive string comparison of the first n characters.
      *
-     * @return int|\lt
+     * @param string $comparison
+     * @param int $length
+     * @return int
      */
-    public function strncasecmp()
+    public function compareFirstNCharactersCaseInsensitive(string $comparison, int $length): int
     {
-        return strncasecmp($this->string);
-        return $this;
+        return strncasecmp($this->string, $comparison, $length);
     }
 
     /**
      * Binary safe string comparison of the first n characters.
      *
-     * @return int|\lt
+     * @param string $comparison
+     * @param int $length
+     * @return int
      */
-    public function strncmp()
+    public function compareFirstNCharacters(string $comparison, int $length): int
     {
-        return strncmp($this->string);
-        return $this;
+        return strncmp($this->string, $comparison, $length);
     }
 
     /**
      * Search a string for any of a set of characters.
      *
-     * @return string
+     * @param string $charlist
+     * @return Stringy
      */
-    public function strpbrk()
+    public function searchForAnyOf(string $charlist): self
     {
-        return strpbrk($this->string);
+        $this->string = strpbrk($this->string, $charlist);
         return $this;
     }
 
     /**
      * Find the position of the first occurrence of a substring in a string.
      *
-     * @return bool|int
+     * @param string $substring
+     * @param int $offset
+     * @return int|null
      */
-    public function strpos()
+    public function getPositionOfSubstring(string $substring, int $offset = 0): ?int
     {
-        return strpos($this->string);
-        return $this;
+        $position = strpos($this->string, $substring, $offset);
+        if (false === $position) {
+            return null;
+        }
+        return $position;
     }
 
     /**
      * Find the last occurrence of a character in a string.
      *
-     * @return string
+     * @param string $character
+     * @return Stringy
      */
-    public function strrchr()
+    public function getLastOccuranceOfCharacter(string $character): self
     {
-        return strrchr($this->string);
+        $this->string = strrchr($this->string, $character);
         return $this;
     }
 
     /**
      * Reverse a string.
      *
-     * @return string
+     * @return Stringy
      */
-    public function strrev()
+    public function reverse(): self
     {
-        return strrev($this->string);
+        $this->string = strrev($this->string);
         return $this;
     }
 
     /**
      * Find the position of the last occurrence of a case-insensitive substring in a string.
      *
-     * @return int
+     * @param string $substring
+     * @param int $offset
+     * @return int|null
      */
-    public function strripos()
+    public function getPositionOfLastSubstringCaseInsensitive(string $substring, int $offset = 0): ?int
     {
-        return strripos($this->string);
-        return $this;
+        $position = strripos($this->string, $substring, $offset);
+        if (false === $position) {
+            return null;
+        }
+        return $position;
     }
 
     /**
      * Find the position of the last occurrence of a substring in a string.
      *
+     * @param string $substring
+     * @param int $offset
      * @return bool|int
      */
-    public function strrpos()
+    public function getPositionOfLastSubstring(string $substring, int $offset = 0): ?int
     {
-        return strrpos($this->string);
-        return $this;
+        $position = strrpos($this->string, $substring, $offset);
+        if (false === $position) {
+            return null;
+        }
+        return $position;
     }
 
     /**
@@ -903,6 +914,7 @@ class Stringy
      */
     public function strspn()
     {
+        // TODO:
         return strspn($this->string);
         return $this;
     }
@@ -910,176 +922,167 @@ class Stringy
     /**
      * Find the first occurrence of a string.
      *
-     * @return string
+     * @param string $substring
+     * @param bool|null $beforeNeedle
+     * @return Stringy
      */
-    public function strstr()
+    public function getMatchedSubstring(string $substring, ?bool $beforeNeedle = null): self
     {
-        return strstr($this->string);
+        $this->string = strstr($this->string, $substring, $beforeNeedle);
         return $this;
     }
 
     /**
      * Tokenize string.
      *
-     * @return string
+     * @param string $delimiter
+     * @return Stringy
      */
-    public function strtok()
+    public function tokenize(string $delimiter): self
     {
-        return strtok($this->string);
+        $this->string = strtok($this->string, $delimiter);
         return $this;
     }
 
     /**
      * Make a string lowercase.
      *
-     * @return string
+     * @return Stringy
      */
-    public function strtolower()
+    public function toLowercase(): self
     {
-        return strtolower($this->string);
+        $this->string = strtolower($this->string);
         return $this;
     }
 
     /**
      * Make a string uppercase.
      *
-     * @return string
+     * @return Stringy
      */
-    public function strtoupper()
+    public function toUppercase(): self
     {
-        return strtoupper($this->string);
+        $this->string = strtoupper($this->string);
         return $this;
     }
 
     /**
      * Translate characters or replace substrings.
      *
-     * @return string
+     * @param string $from
+     * @param string $to
+     * @return Stringy
      */
-    public function strtr()
+    public function translate(string $from, string $to): self
     {
-        return strtr($this->string);
+        $this->string = strtr($this->string, $from, $to);
         return $this;
     }
 
     /**
      * Binary safe comparison of two strings from an offset, up to length characters.
      *
-     * @return int|\lt
+     * @param string $comparison
+     * @param int $offset
+     * @param int|null $limit
+     * @param bool|null $caseInsensitive
+     * @return int
      */
-    public function substr_compare()
-    {
-        return substr_compare($this->string);
-        return $this;
+    public function compareWithOffsetAndLimit(
+        string $comparison,
+        int $offset,
+        ?int $limit = null,
+        ?bool $caseInsensitive = null
+    ): int {
+        return substr_compare($this->string, $comparison, $offset, $limit, $caseInsensitive);
     }
 
     /**
      * Count the number of substring occurrences.
      *
+     * @param string $substring
+     * @param int|null $offset
+     * @param int|null $limit
      * @return int
      */
-    public function substr_count()
+    public function getNumberOfSubstringOccurances(string $substring, ?int $offset = null, ?int $limit = null): int
     {
-        return substr_count($this->string);
-        return $this;
+        return substr_count($this->string, $substring, $offset, $limit);
     }
 
     /**
      * Replace text within a portion of a string.
      *
+     * @param string $replacement
+     * @param int $offset
+     * @param int|null $limit
      * @return mixed
      */
-    public function substr_replace()
+    public function replaceSubstring(string $replacement, int $offset, ?int $limit = null): self
     {
-        return substr_replace($this->string);
+        $this->string = substr_replace($this->string, $replacement, $offset, $limit);
         return $this;
     }
 
     /**
      * Return part of a string.
      *
-     * @return bool|string
+     * @param int $offset
+     * @param int|null $limit
+     * @return Stringy
      */
-    public function substr()
+    public function substring(int $offset, ?int $limit = null): self
     {
-        return substr($this->string);
+        $this->string = substr($this->string, $offset, $limit);
         return $this;
     }
 
     /**
      * Strip whitespace (or other characters) from the beginning and end of a string.
      *
-     * @return string
+     * @param string $charlist
+     * @return Stringy
      */
-    public function trim()
+    public function trimBoth(string $charlist = " \t\n\r\0\x0B"): self
     {
-        return trim($this->string);
+        $this->string = trim($this->string, $charlist);
         return $this;
     }
 
     /**
      * Make a string's first character uppercase.
      *
-     * @return string
+     * @return Stringy
      */
-    public function ucfirst()
+    public function uppercaseFirst(): self
     {
-        return ucfirst($this->string);
+        $this->string = ucfirst($this->string);
         return $this;
     }
 
     /**
      * Uppercase the first character of each word in a string.
      *
-     * @return string
+     * @param string $delimiters
+     * @return Stringy
      */
-    public function ucwords()
+    public function uppercaseWords(string $delimiters = " \t\r\n\f\v"): self
     {
-        return ucwords($this->string);
-        return $this;
-    }
-
-    /**
-     * Write a formatted string to a stream.
-     *
-     * @return int
-     */
-    public function vfprintf()
-    {
-        return vfprintf($this->string);
-        return $this;
-    }
-
-    /**
-     * Output a formatted string.
-     *
-     * @return int
-     */
-    public function vprintf()
-    {
-        return vprintf($this->string);
-        return $this;
-    }
-
-    /**
-     * Return a formatted string.
-     *
-     * @return string
-     */
-    public function vsprintf()
-    {
-        return vsprintf($this->string);
+        $this->string = ucwords($this->string, $delimiters);
         return $this;
     }
 
     /**
      * Wraps a string to a given number of characters.
      *
-     * @return string
+     * @param int $width
+     * @param string $break
+     * @param bool $cut
+     * @return Stringy
      */
-    public function wordwrap()
+    public function wordWrap(int $width, string $break = "\n", bool $cut = false): self
     {
-        return wordwrap($this->string);
+        $this->string = wordwrap($this->string, $width, $break, $cut);
         return $this;
     }
 
@@ -1088,176 +1091,75 @@ class Stringy
     /**
      * Check if the string is valid for the specified encoding.
      *
+     * @param string|null $encoding
      * @return bool
      */
-    public function mb_check_encoding()
+    public function checkEncoding(?string $encoding = null): bool
     {
-        return mb_check_encoding($this->string);
-        return $this;
-    }
-
-    /**
-     * Get a specific character.
-     *
-     * @return false|string
-     */
-    public function mb_chr()
-    {
-        return mb_chr($this->string);
-        return $this;
-    }
-
-    /**
-     * Perform case folding on a string.
-     *
-     * @return string
-     */
-    public function mb_convert_case()
-    {
-        return mb_convert_case($this->string);
-        return $this;
+        return mb_check_encoding($this->string, $encoding);
     }
 
     /**
      * Convert character encoding.
      *
-     * @return string
+     * @param string $to
+     * @param string|null $from
+     * @return Stringy
      */
-    public function mb_convert_encoding()
+    public function convertEncoding(string $to, ?string $from = null): self
     {
-        return mb_convert_encoding($this->string);
-        return $this;
-    }
-
-    /**
-     * Convert "kana" one from another ("zen-kaku", "han-kaku" and more).
-     *
-     * @return string
-     */
-    public function mb_convert_kana()
-    {
-        return mb_convert_kana($this->string);
-        return $this;
-    }
-
-    /**
-     * Convert character code in variable(s).
-     *
-     * @return false|string
-     */
-    public function mb_convert_variables()
-    {
-        return mb_convert_variables($this->string);
-        return $this;
-    }
-
-    /**
-     * Decode string in MIME header field.
-     *
-     * @return string
-     */
-    public function mb_decode_mimeheader()
-    {
-        return mb_decode_mimeheader($this->string);
-        return $this;
-    }
-
-    /**
-     * Decode HTML numeric string reference to character.
-     *
-     * @return string
-     */
-    public function mb_decode_numericentity()
-    {
-        return mb_decode_numericentity($this->string);
+        $this->string = mb_convert_encoding($this->string, $to, $from);
         return $this;
     }
 
     /**
      * Detect character encoding.
      *
-     * @return false|string
+     * @param array|null $encodingList
+     * @return string|null
      */
-    public function mb_detect_encoding()
+    public function detectEncoding(array $encodingList = null): ?string
     {
-        return mb_detect_encoding($this->string);
-        return $this;
-    }
-
-    /**
-     * Set/Get character encoding detection order.
-     *
-     * @return bool|string[]
-     */
-    public function mb_detect_order()
-    {
-        return mb_detect_order($this->string);
-        return $this;
-    }
-
-    /**
-     * Encode string for MIME header.
-     *
-     * @return string
-     */
-    public function mb_encode_mimeheader()
-    {
-        return mb_encode_mimeheader($this->string);
-        return $this;
-    }
-
-    /**
-     * Encode character to HTML numeric string reference.
-     *
-     * @return string
-     */
-    public function mb_encode_numericentity()
-    {
-        return mb_encode_numericentity($this->string);
-        return $this;
-    }
-
-    /**
-     * Get aliases of a known encoding type.
-     *
-     * @return false|string[]
-     */
-    public function mb_encoding_aliases()
-    {
-        return mb_encoding_aliases($this->string);
-        return $this;
+        return mb_detect_encoding($this->string, $encodingList, true) ?: null;
     }
 
     /**
      * Regular expression match for multibyte string.
      *
+     * @param string $pattern
+     * @param string|null $option
      * @return bool
      */
-    public function mb_ereg_match()
+    public function eregMatch(string $pattern, ?string $option = null): bool
     {
-        return mb_ereg_match($this->string);
-        return $this;
+        return mb_ereg_match($this->string, $pattern, $option);
     }
 
     /**
      * Perform a regular expression search and replace with multibyte support using a callback.
      *
-     * @return false|string
+     * @param string $pattern
+     * @param callable $callback
+     * @param string $option
+     * @return Stringy
      */
-    public function mb_ereg_replace_callback()
+    public function eregReplaceCallback(string $pattern, callable $callback, string $option = 'msr'): self
     {
-        return mb_ereg_replace_callback($this->string);
+        $this->string = mb_ereg_replace_callback($pattern, $callback, $this->string, $option);
         return $this;
     }
 
     /**
      * Replace regular expression with multibyte support.
      *
-     * @return false|string
+     * @param string $pattern
+     * @param string $replacement
+     * @param string $option
+     * @return Stringy
      */
-    public function mb_ereg_replace()
+    public function eregReplace(string $pattern, string $replacement, string $option = 'msr'): self
     {
-        return mb_ereg_replace($this->string);
+        $this->string = mb_ereg_replace($pattern, $replacement, $this->string, $option);
         return $this;
     }
 
