@@ -24,7 +24,7 @@ use WernerDweight\Stringy\Stringy;
 
 $stringy = new Stringy('This is a string');
 echo $string
-    ->toLower()    // this is a string
+    ->toLowercase()    // this is a string
     ->replace(' ', '-')    // this-is-a-string
     ->convertCase(Stringy::KEBAB, Stringy::PASCAL)   // ThisIsAString
     ->reverse();    // gnirtSAsIsihT

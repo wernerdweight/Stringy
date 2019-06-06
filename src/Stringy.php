@@ -1417,7 +1417,7 @@ final class Stringy
      *
      * @return Stringy
      */
-    public function preg_replace_callback(string $pattern, callable $callback, int $limit = -1): self
+    public function pregReplaceCallback(string $pattern, callable $callback, int $limit = -1): self
     {
         /** @var string $replacedString */
         $replacedString = preg_replace_callback($pattern, $callback, $this->string, $limit);
