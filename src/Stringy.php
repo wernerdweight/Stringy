@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace WernerDweight\Stringy;
 
+use Safe\Exceptions\PcreException;
 use Safe\Exceptions\StringsException;
 use WernerDweight\Stringy\Exception\StringyException;
 
@@ -1249,92 +1250,103 @@ class Stringy
 
     /**
      * Perform a regular expression search and replace
+     * @param string $pattern
+     * @param string $replacement
+     * @param int $limit
+     * @return Stringy
      */
-    public function preg_filter(): self
+    public function pregFilter(string $pattern, string $replacement, int $limit = -1): self
     {
-        $this->string = preg_filter($this->string);
-        return $this;
-    }
-
-    /**
-     * Return array entries that match the pattern
-     */
-    public function preg_grep(): self
-    {
-        $this->string = preg_grep($this->string);
-        return $this;
-    }
-
-    /**
-     * Returns the error code of the last PCRE regex execution
-     */
-    public function preg_last_error(): self
-    {
-        $this->string = preg_last_error($this->string);
+        $this->string = preg_filter($pattern, $replacement, $this->string, $limit);
         return $this;
     }
 
     /**
      * Perform a global regular expression match
+     * @param string $pattern
+     * @param int $flags
+     * @param int $offset
+     * @return array
      */
-    public function preg_match_all(): self
+    public function pregGetAllMatches(string $pattern, int $flags = PREG_PATTERN_ORDER, int $offset = 0): array
     {
-        $this->string = preg_match_all($this->string);
-        return $this;
+        $matches = [];
+        preg_match_all($pattern, $this->string, $matches, $flags, $offset);
+        return $matches;
     }
 
     /**
      * Perform a regular expression match
+     * @param string $pattern
+     * @param int $flags
+     * @param int $offset
+     * @return bool
+     * @throws PcreException
      */
-    public function preg_match(): self
+    public function pregMatch(string $pattern, int $flags = 0, int $offset = 0): bool
     {
-        $this->string = preg_match($this->string);
-        return $this;
+        $matches = [];
+        return \Safe\preg_match($pattern, $this->string, $matches, $flags, $offset) > 0;
     }
 
     /**
      * Quote regular expression characters
+     * @param string|null $delimiter
+     * @return Stringy
      */
-    public function preg_quote(): self
+    public function pregQuote(?string $delimiter = null): self
     {
-        $this->string = preg_quote($this->string);
+        $this->string = preg_quote($this->string, $delimiter);
         return $this;
     }
 
     /**
      * Perform a regular expression search and replace using callbacks
+     * @param array $patternsAndCallbacks
+     * @param int $limit
+     * @return Stringy
      */
-    public function preg_replace_callback_array(): self
+    public function pregReplaceCallbackArray(array $patternsAndCallbacks, int $limit = -1): self
     {
-        $this->string = preg_replace_callback_array($this->string);
+        $this->string = preg_replace_callback_array($patternsAndCallbacks, $this->string, $limit);
         return $this;
     }
 
     /**
      * Perform a regular expression search and replace using a callback
+     * @param string $pattern
+     * @param callable $callback
+     * @param int $limit
+     * @return Stringy
      */
-    public function preg_replace_callback(): self
+    public function preg_replace_callback(string $pattern, callable $callback, int $limit = -1): self
     {
-        $this->string = preg_replace_callback($this->string);
+        $this->string = preg_replace_callback($pattern, $callback, $this->string, $limit);
         return $this;
     }
 
     /**
      * Perform a regular expression search and replace
+     * @param string $pattern
+     * @param string $replacement
+     * @param int $limit
+     * @return Stringy
      */
-    public function preg_replace(): self
+    public function pregReplace(string $pattern, string $replacement, int $limit = -1): self
     {
-        $this->string = preg_replace($this->string);
+        $this->string = preg_replace($pattern, $replacement, $this->string, $limit);
         return $this;
     }
 
     /**
      * Split string by a regular expression
+     * @param string $pattern
+     * @param int $limit
+     * @return array
      */
-    public function preg_split(): self
+    public function pregSplit(string $pattern, int $limit = -1): array
     {
-        $this->string = preg_split($this->string);
-        return $this;
+        return preg_split($pattern, $this->string, $limit);
     }
 
     // extra functions
@@ -1349,7 +1361,7 @@ class Stringy
 
         $position = 0;
         $positions = [];
-        while (($position = $this->pos($substring, $position)) !== false) {
+        while (($position = $this->getPositionOfSubstring((string)$substring, $position)) !== false) {
             $positions[] = $position;
             $position += $substring->length();
         }
@@ -1394,7 +1406,7 @@ class Stringy
             $this->lowercaseFirst();
         }
 
-        return $this->pregReplace('/([A-Z])/', '-$1')->toLower();
+        return $this->pregReplace('/([A-Z])/', '-$1')->toLowercase();
     }
 
     /**
@@ -1415,7 +1427,7 @@ class Stringy
         }
 
         if ($from !== self::CASE_KEBAB) {
-            $this->toKebab();
+            $this->toKebab($from);
         }
 
         if ($to === self::CASE_KEBAB) {
@@ -1444,9 +1456,9 @@ class Stringy
      * @param string $value
      * @return string
      */
-    public static function dotNotationToCamelCase(string $value): string
+    public function dotNotationToCamelCase(string $value): string
     {
-        $positions = self::getPositionsOfSubstring($value, '.');
+        $positions = $this->getPositionsOfSubstring($value);
         if (count($positions) > 0) {
             foreach ($positions as $position) {
                 $value[$position + 1] = strtoupper($value[$position + 1]);
