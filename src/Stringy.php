@@ -121,12 +121,12 @@ class Stringy
     /**
      * Split a string into smaller chunks.
      *
-     * @param int|null    $length
-     * @param string|null $eol
+     * @param int    $length
+     * @param string $eol
      *
      * @return Stringy
      */
-    public function chunkSplit(?int $length = null, ?string $eol = null): self
+    public function chunkSplit(int $length, string $eol = "\r\n"): self
     {
         $this->string = chunk_split($this->string, $length, $eol);
         return $this;
@@ -171,11 +171,11 @@ class Stringy
     /**
      * Return information about characters used in a string.
      *
-     * @param int|null $mode
+     * @param int $mode
      *
      * @return mixed
      */
-    public function getCharacterStats(?int $mode = null)
+    public function getCharacterStats(int $mode = 0)
     {
         return count_chars($this->string, $mode);
     }
@@ -193,11 +193,11 @@ class Stringy
     /**
      * One-way string hashing.
      *
-     * @param string|null $salt
+     * @param string $salt
      *
      * @return Stringy
      */
-    public function crypt(?string $salt = null): self
+    public function crypt(string $salt): self
     {
         $this->string = crypt($this->string, $salt);
         return $this;
@@ -207,23 +207,27 @@ class Stringy
      * Split a string by a string.
      *
      * @param string   $delimiter
-     * @param int|null $limit
+     * @param int $limit
      *
      * @return string[]
      */
-    public function explode(string $delimiter, ?int $limit = null): array
+    public function explode(string $delimiter, int $limit = PHP_INT_MAX): array
     {
-        return explode($delimiter, $this->string, $limit);
+        $result = explode($delimiter, $this->string, $limit);
+        if (false === $result) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        return $result;
     }
 
     /**
      * Convert logical Hebrew text to visual text.
      *
-     * @param int|null $maxCharsPerLine
+     * @param int $maxCharsPerLine
      *
      * @return Stringy
      */
-    public function hebrevToVisual(?int $maxCharsPerLine = null): self
+    public function hebrevToVisual(int $maxCharsPerLine = 0): self
     {
         $this->string = hebrev($this->string, $maxCharsPerLine);
         return $this;
@@ -232,11 +236,11 @@ class Stringy
     /**
      * Convert logical Hebrew text to visual text with newline conversion.
      *
-     * @param int|null $maxCharsPerLine
+     * @param int $maxCharsPerLine
      *
      * @return Stringy
      */
-    public function hebrevToVisualWithNewlineConversion(?int $maxCharsPerLine = null): self
+    public function hebrevToVisualWithNewlineConversion(int $maxCharsPerLine = 0): self
     {
         $this->string = hebrevc($this->string, $maxCharsPerLine);
         return $this;
@@ -245,43 +249,43 @@ class Stringy
     /**
      * Convert HTML entities to their corresponding characters.
      *
-     * @param int|null    $quoteStyle
+     * @param int    $quoteStyle
      * @param string|null $charset
      *
      * @return Stringy
      */
-    public function decodeHtmlEntities(?int $quoteStyle = null, ?string $charset = null): self
+    public function decodeHtmlEntities(int $quoteStyle = ENT_COMPAT | ENT_HTML401, ?string $charset = null): self
     {
-        $this->string = html_entity_decode($this->string, $quoteStyle, $charset);
+        $this->string = html_entity_decode($this->string, $quoteStyle, $charset ?: (string)ini_get('default_charset'));
         return $this;
     }
 
     /**
      * Convert all applicable characters to HTML entities.
      *
-     * @param int|null    $quoteStyle
+     * @param int    $quoteStyle
      * @param string|null $charset
      * @param bool        $doubleEncode
      *
      * @return Stringy
      */
     public function encodeHtmlEntities(
-        ?int $quoteStyle = null,
+        int $quoteStyle = ENT_COMPAT | ENT_HTML401,
         ?string $charset = null,
         bool $doubleEncode = true
     ): self {
-        $this->string = htmlentities($this->string, $quoteStyle, $charset, $doubleEncode);
+        $this->string = htmlentities($this->string, $quoteStyle, $charset ?: (string)ini_get('default_charset'), $doubleEncode);
         return $this;
     }
 
     /**
      * Convert special HTML entities back to characters.
      *
-     * @param int|null $quoteStyle
+     * @param int $quoteStyle
      *
      * @return Stringy
      */
-    public function decodeHtmlSpecialChars(?int $quoteStyle = null): self
+    public function decodeHtmlSpecialChars(int $quoteStyle = ENT_COMPAT | ENT_HTML401): self
     {
         $this->string = htmlspecialchars_decode($this->string, $quoteStyle);
         return $this;
@@ -290,14 +294,14 @@ class Stringy
     /**
      * Convert special characters to HTML entities.
      *
-     * @param int|null $flags
+     * @param int $flags
      * @param string   $encoding
      * @param bool     $doubleEncode
      *
      * @return Stringy
      */
     public function encodeHtmlSpecialChars(
-        ?int $flags = ENT_COMPAT | ENT_HTML401,
+        int $flags = ENT_COMPAT | ENT_HTML401,
         string $encoding = 'UTF-8',
         bool $doubleEncode = true
     ): self {
@@ -320,17 +324,17 @@ class Stringy
      * Calculate Levenshtein distance between two strings.
      *
      * @param string   $comparison
-     * @param int|null $costOfInsertion
-     * @param int|null $costOfReplacement
-     * @param int|null $costOfDeletion
+     * @param int $costOfInsertion
+     * @param int $costOfReplacement
+     * @param int $costOfDeletion
      *
      * @return int
      */
     public function levenshtein(
         string $comparison,
-        ?int $costOfInsertion = null,
-        ?int $costOfReplacement = null,
-        ?int $costOfDeletion = null
+        int $costOfInsertion = 1,
+        int $costOfReplacement = 1,
+        int $costOfDeletion = 1
     ): int {
         return levenshtein($this->string, $comparison, $costOfInsertion, $costOfReplacement, $costOfDeletion);
     }
@@ -351,11 +355,11 @@ class Stringy
     /**
      * Calculate the md5 hash of a string.
      *
-     * @param bool|null $rawOutput
+     * @param bool $rawOutput
      *
      * @return Stringy
      */
-    public function md5(?bool $rawOutput = null): self
+    public function md5(bool $rawOutput = false): self
     {
         $this->string = md5($this->string, $rawOutput);
         return $this;
@@ -375,19 +379,6 @@ class Stringy
     }
 
     /**
-     * Formats a number as a currency string.
-     *
-     * @param string $format
-     *
-     * @return Stringy
-     */
-    public function moneyFormat(string $format): self
-    {
-        $this->string = money_format($format, $this->string);
-        return $this;
-    }
-
-    /**
      * Inserts HTML line breaks before all newlines in a string.
      *
      * @param bool $isXml
@@ -401,21 +392,6 @@ class Stringy
     }
 
     /**
-     * Format a number with grouped thousands.
-     *
-     * @param int    $decimals
-     * @param string $decimalPoint
-     * @param string $thousandsSeparator
-     *
-     * @return Stringy
-     */
-    public function numberFormat(int $decimals = 0, string $decimalPoint = '.', string $thousandsSeparator = ','): self
-    {
-        $this->string = number_format($this->string, $decimals, $decimalPoint, $thousandsSeparator);
-        return $this;
-    }
-
-    /**
      * Parses the string into variables.
      */
     public function parseIntoVariables(): array
@@ -423,19 +399,6 @@ class Stringy
         $variables = [];
         mb_parse_str($this->string, $variables);
         return $variables;
-    }
-
-    /**
-     * Output a formatted string.
-     *
-     * @param mixed ...$args
-     *
-     * @return Stringy
-     */
-    public function printf(...$args): self
-    {
-        $this->string = printf($this->string, ...$args);
-        return $this;
     }
 
     /**
@@ -487,11 +450,11 @@ class Stringy
     /**
      * Calculate the sha1 hash of a string.
      *
-     * @param bool|null $rawOutput
+     * @param bool $rawOutput
      *
      * @return Stringy
      */
-    public function sha1(?bool $rawOutput = null): self
+    public function sha1(bool $rawOutput = false): self
     {
         $this->string = sha1($this->string, $rawOutput);
         return $this;
@@ -663,7 +626,11 @@ class Stringy
      */
     public function split(int $length = 1): array
     {
-        return str_split($this->string, $length);
+        $result = str_split($this->string, $length);
+        if (false === $result) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        return $result;
     }
 
     /**
@@ -675,7 +642,9 @@ class Stringy
      */
     public function getWordCount(?string $charlist = null): int
     {
-        return str_word_count($this->string, null, $charlist);
+        /** @var int $result */
+        $result = str_word_count($this->string, 0, $charlist);
+        return $result;
     }
 
     /**
@@ -742,17 +711,17 @@ class Stringy
      * Find the position of the first occurrence of a case-insensitive substring in a string.
      *
      * @param string      $substring
-     * @param int|null    $offset
+     * @param int    $offset
      * @param string|null $encoding
      *
-     * @return int
+     * @return int|null
      */
     public function getPositionOfSubstringCaseInsensitive(
         string $substring,
-        ?int $offset = null,
+        int $offset = 0,
         ?string $encoding = null
-    ): int {
-        return mb_stripos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
+    ): ?int {
+        return mb_stripos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding()) ?: null;
     }
 
     /**
@@ -770,18 +739,17 @@ class Stringy
      * Case-insensitive strstr.
      *
      * @param string      $substring
-     * @param bool|null   $beforeNeedle
+     * @param bool   $beforeNeedle
      * @param string|null $encoding
      *
-     * @return Stringy
+     * @return string|null
      */
     public function getMatchedSubstringCaseInsensitive(
         string $substring,
-        ?bool $beforeNeedle = null,
+        ?bool $beforeNeedle = false,
         ?string $encoding = null
-    ): self {
-        $this->string = mb_stristr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding());
-        return $this;
+    ): ?string {
+        return mb_stristr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding()) ?: null;
     }
 
     /**
@@ -851,12 +819,11 @@ class Stringy
      *
      * @param string $charlist
      *
-     * @return Stringy
+     * @return string|null
      */
-    public function searchForAnyOf(string $charlist): self
+    public function searchForAnyOf(string $charlist): ?string
     {
-        $this->string = strpbrk($this->string, $charlist);
-        return $this;
+        return strpbrk($this->string, $charlist) ?: null;
     }
 
     /**
@@ -884,12 +851,14 @@ class Stringy
      * @param bool        $part
      * @param string|null $encoding
      *
-     * @return Stringy
+     * @return string|null
      */
-    public function getLastOccuranceOfCharacter(string $character, bool $part = false, ?string $encoding = null): self
-    {
-        $this->string = mb_strrchr($this->string, $character, $part, $encoding ?: mb_internal_encoding());
-        return $this;
+    public function getLastOccuranceOfCharacter(
+        string $character,
+        bool $part = false,
+        ?string $encoding = null
+    ): ?string {
+        return mb_strrchr($this->string, $character, $part, $encoding ?: mb_internal_encoding()) ?: null;
     }
 
     /**
@@ -899,15 +868,14 @@ class Stringy
      * @param bool        $part
      * @param string|null $encoding
      *
-     * @return Stringy
+     * @return string|null
      */
     public function getLastOccuranceOfCharacterCaseInsensitive(
         string $character,
         bool $part = false,
         ?string $encoding = null
-    ): self {
-        $this->string = mb_strrichr($this->string, $character, $part, $encoding ?: mb_internal_encoding());
-        return $this;
+    ): ?string {
+        return mb_strrichr($this->string, $character, $part, $encoding ?: mb_internal_encoding()) ?: null;
     }
 
     /**
@@ -949,7 +917,7 @@ class Stringy
      * @param int         $offset
      * @param string|null $encoding
      *
-     * @return bool|int
+     * @return int|null
      */
     public function getPositionOfLastSubstring(string $substring, int $offset = 0, ?string $encoding = null): ?int
     {
@@ -964,15 +932,14 @@ class Stringy
      * Find the first occurrence of a string.
      *
      * @param string      $substring
-     * @param bool|null   $beforeNeedle
+     * @param bool   $beforeNeedle
      * @param string|null $encoding
      *
-     * @return Stringy
+     * @return string|null
      */
-    public function getMatchedSubstring(string $substring, ?bool $beforeNeedle = null, ?string $encoding = null): self
+    public function getMatchedSubstring(string $substring, bool $beforeNeedle = false, ?string $encoding = null): ?string
     {
-        $this->string = mb_strstr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding());
-        return $this;
+        return mb_strstr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding()) ?: null;
     }
 
     /**
@@ -1034,7 +1001,7 @@ class Stringy
      * @param string    $comparison
      * @param int       $offset
      * @param int|null  $limit
-     * @param bool|null $caseInsensitive
+     * @param bool $caseInsensitive
      *
      * @return int
      */
@@ -1042,9 +1009,13 @@ class Stringy
         string $comparison,
         int $offset,
         ?int $limit = null,
-        ?bool $caseInsensitive = null
+        bool $caseInsensitive = false
     ): int {
-        return substr_compare($this->string, $comparison, $offset, $limit, $caseInsensitive);
+        $result = substr_compare($this->string, $comparison, $offset, $limit, $caseInsensitive);
+        if (false === $result) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        return $result;
     }
 
     /**
@@ -1067,7 +1038,7 @@ class Stringy
      * @param int      $offset
      * @param int|null $limit
      *
-     * @return mixed
+     * @return Stringy
      */
     public function replaceSubstring(string $replacement, int $offset, ?int $limit = null): self
     {
@@ -1086,7 +1057,7 @@ class Stringy
      */
     public function substring(int $offset, ?int $limit = null, ?string $encoding = null): self
     {
-        $this->string = mb_substr($this->string, $offset, $limit, $encoding);
+        $this->string = mb_substr($this->string, $offset, $limit, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
@@ -1153,7 +1124,7 @@ class Stringy
      */
     public function checkEncoding(?string $encoding = null): bool
     {
-        return mb_check_encoding($this->string, $encoding);
+        return mb_check_encoding($this->string, $encoding ?: mb_internal_encoding());
     }
 
     /**
@@ -1186,11 +1157,11 @@ class Stringy
      * Regular expression match for multibyte string.
      *
      * @param string      $pattern
-     * @param string|null $option
+     * @param string $option
      *
      * @return bool
      */
-    public function eregMatch(string $pattern, ?string $option = null): bool
+    public function eregMatch(string $pattern, string $option = 'msr'): bool
     {
         return mb_ereg_match($this->string, $pattern, $option);
     }
@@ -1275,7 +1246,7 @@ class Stringy
      */
     public function scrub(?string $encoding = null): self
     {
-        $this->string = mb_scrub($this->string, $encoding);
+        $this->string = mb_scrub($this->string, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
@@ -1397,7 +1368,11 @@ class Stringy
      */
     public function pregReplaceCallbackArray(array $patternsAndCallbacks, int $limit = -1): self
     {
-        $this->string = preg_replace_callback_array($patternsAndCallbacks, $this->string, $limit);
+        $replacedString = preg_replace_callback_array($patternsAndCallbacks, $this->string, $limit);
+        if (null === $replacedString) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        $this->string = $replacedString;
         return $this;
     }
 

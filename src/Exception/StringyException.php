@@ -15,6 +15,8 @@ class StringyException extends AbstractEnhancedException
     public const EXCEPTION_INVALID_CASE = 3;
     /** @var int */
     public const EXCEPTION_SAME_CASE = 4;
+    /** @var int */
+    public const EXCEPTION_UNEXPECTED_RESULT = 5;
 
     /** @var string[] */
     protected static $messages = [
@@ -22,5 +24,6 @@ class StringyException extends AbstractEnhancedException
         self::EXCEPTION_SAME_BASE => 'Invalid base conversion! Base %s can\'t be converted to itself.',
         self::EXCEPTION_INVALID_CASE => 'Invalid case %s! Use one of %s.',
         self::EXCEPTION_SAME_CASE => 'Invalid case conversion! Case %s can\'t be converted to itself.',
+        self::EXCEPTION_UNEXPECTED_RESULT => 'Unexpected result of an internal call occured!',
     ];
 }
