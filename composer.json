@@ -16,6 +16,7 @@
     ],
     "require": {
         "php": ">=7.2.0",
+        "ext-mbstring": "*",
         "thecodingmachine/safe": "^0.1.13",
         "wernerdweight/enhanced-exception": "^1.0"
     },

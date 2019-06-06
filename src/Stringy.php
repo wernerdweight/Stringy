@@ -208,18 +208,6 @@ class Stringy
     }
 
     /**
-     * TODO:
-     * Write a formatted string to a stream.
-     *
-     * @return int
-     */
-    public function fprintf()
-    {
-        return fprintf($this->string);
-        return $this;
-    }
-
-    /**
      * Convert logical Hebrew text to visual text.
      *
      * @param int|null $maxCharsPerLine
@@ -406,24 +394,12 @@ class Stringy
     }
 
     /**
-     * Convert the first byte of a string to a value between 0 and 255.
-     *
-     * @return int
-     */
-    public function ord()
-    {
-        // TODO:
-        return ord($this->string);
-        return $this;
-    }
-
-    /**
      * Parses the string into variables.
      */
     public function parseIntoVariables(): array
     {
         $variables = [];
-        parse_str($this->string, $variables);
+        mb_parse_str($this->string, $variables);
         return $variables;
     }
 
@@ -492,7 +468,7 @@ class Stringy
      */
     public function sha1(?bool $rawOutput = null): self
     {
-        return sha1($this->string, $rawOutput);
+        $this->string = sha1($this->string, $rawOutput);
         return $this;
     }
 
@@ -646,6 +622,7 @@ class Stringy
     /**
      * Convert a string to an array.
      *
+     * @param int $length
      * @return string[]
      */
     public function split(int $length = 1): array
@@ -698,18 +675,6 @@ class Stringy
     }
 
     /**
-     * Find length of initial segment not matching mask.
-     *
-     * @return int
-     */
-    public function strcspn()
-    {
-        // TODO:
-        return strcspn($this->string);
-        return $this;
-    }
-
-    /**
      * Strip HTML and PHP tags from a string.
      *
      * @param string|null $allowableTags
@@ -737,11 +702,15 @@ class Stringy
      *
      * @param string $substring
      * @param int|null $offset
+     * @param string|null $encoding
      * @return int
      */
-    public function getPositionOfSubstringCaseInsensitive(string $substring, ?int $offset = null): int
-    {
-        return stripos($this->string, $substring, $offset);
+    public function getPositionOfSubstringCaseInsensitive(
+        string $substring,
+        ?int $offset = null,
+        ?string $encoding = null
+    ): int {
+        return mb_stripos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
     }
 
     /**
@@ -760,22 +729,27 @@ class Stringy
      *
      * @param string $substring
      * @param bool|null $beforeNeedle
+     * @param string|null $encoding
      * @return Stringy
      */
-    public function getMatchedSubstringCaseInsensitive(string $substring, ?bool $beforeNeedle = null): self
-    {
-        $this->string = stristr($this->string, $substring, $beforeNeedle);
+    public function getMatchedSubstringCaseInsensitive(
+        string $substring,
+        ?bool $beforeNeedle = null,
+        ?string $encoding = null
+    ): self {
+        $this->string = mb_stristr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
     /**
      * Get string length.
      *
+     * @param string|null $encoding
      * @return int
      */
-    public function length(): int
+    public function length(?string $encoding = null): int
     {
-        return strlen($this->string);
+        return mb_strlen($this->string, $encoding ?: mb_internal_encoding());
     }
 
     /**
@@ -841,11 +815,12 @@ class Stringy
      *
      * @param string $substring
      * @param int $offset
+     * @param string|null $encoding
      * @return int|null
      */
-    public function getPositionOfSubstring(string $substring, int $offset = 0): ?int
+    public function getPositionOfSubstring(string $substring, int $offset = 0, ?string $encoding = null): ?int
     {
-        $position = strpos($this->string, $substring, $offset);
+        $position = mb_strpos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
         if (false === $position) {
             return null;
         }
@@ -856,11 +831,30 @@ class Stringy
      * Find the last occurrence of a character in a string.
      *
      * @param string $character
+     * @param bool $part
+     * @param string|null $encoding
      * @return Stringy
      */
-    public function getLastOccuranceOfCharacter(string $character): self
+    public function getLastOccuranceOfCharacter(string $character, bool $part = false, ?string $encoding = null): self
     {
-        $this->string = strrchr($this->string, $character);
+        $this->string = mb_strrchr($this->string, $character, $part, $encoding ?: mb_internal_encoding());
+        return $this;
+    }
+
+    /**
+     * Find the last occurrence of a character in a string.
+     *
+     * @param string $character
+     * @param bool $part
+     * @param string|null $encoding
+     * @return Stringy
+     */
+    public function getLastOccuranceOfCharacterCaseInsensitive(
+        string $character,
+        bool $part = false,
+        ?string $encoding = null
+    ): self {
+        $this->string = mb_strrichr($this->string, $character, $part, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
@@ -880,11 +874,15 @@ class Stringy
      *
      * @param string $substring
      * @param int $offset
+     * @param string|null $encoding
      * @return int|null
      */
-    public function getPositionOfLastSubstringCaseInsensitive(string $substring, int $offset = 0): ?int
-    {
-        $position = strripos($this->string, $substring, $offset);
+    public function getPositionOfLastSubstringCaseInsensitive(
+        string $substring,
+        int $offset = 0,
+        ?string $encoding = null
+    ): ?int {
+        $position = mb_strripos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
         if (false === $position) {
             return null;
         }
@@ -896,11 +894,12 @@ class Stringy
      *
      * @param string $substring
      * @param int $offset
+     * @param string|null $encoding
      * @return bool|int
      */
-    public function getPositionOfLastSubstring(string $substring, int $offset = 0): ?int
+    public function getPositionOfLastSubstring(string $substring, int $offset = 0, ?string $encoding = null): ?int
     {
-        $position = strrpos($this->string, $substring, $offset);
+        $position = mb_strrpos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
         if (false === $position) {
             return null;
         }
@@ -908,27 +907,16 @@ class Stringy
     }
 
     /**
-     * Finds the length of the initial segment of a string consisting entirely of characters contained within a given mask.
-     *
-     * @return int
-     */
-    public function strspn()
-    {
-        // TODO:
-        return strspn($this->string);
-        return $this;
-    }
-
-    /**
      * Find the first occurrence of a string.
      *
      * @param string $substring
      * @param bool|null $beforeNeedle
+     * @param string|null $encoding
      * @return Stringy
      */
-    public function getMatchedSubstring(string $substring, ?bool $beforeNeedle = null): self
+    public function getMatchedSubstring(string $substring, ?bool $beforeNeedle = null, ?string $encoding = null): self
     {
-        $this->string = strstr($this->string, $substring, $beforeNeedle);
+        $this->string = mb_strstr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
@@ -947,22 +935,24 @@ class Stringy
     /**
      * Make a string lowercase.
      *
+     * @param string|null $encoding
      * @return Stringy
      */
-    public function toLowercase(): self
+    public function toLowercase(?string $encoding = null): self
     {
-        $this->string = strtolower($this->string);
+        $this->string = mb_strtolower($this->string, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
     /**
      * Make a string uppercase.
      *
+     * @param string|null $encoding
      * @return Stringy
      */
-    public function toUppercase(): self
+    public function toUppercase(?string $encoding = null): self
     {
-        $this->string = strtoupper($this->string);
+        $this->string = mb_strtoupper($this->string, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
@@ -1001,13 +991,12 @@ class Stringy
      * Count the number of substring occurrences.
      *
      * @param string $substring
-     * @param int|null $offset
-     * @param int|null $limit
+     * @param string|null $encoding
      * @return int
      */
-    public function getNumberOfSubstringOccurances(string $substring, ?int $offset = null, ?int $limit = null): int
+    public function getNumberOfSubstringOccurances(string $substring, ?string $encoding = null): int
     {
-        return substr_count($this->string, $substring, $offset, $limit);
+        return mb_substr_count($this->string, $substring, $encoding ?: mb_internal_encoding());
     }
 
     /**
@@ -1029,11 +1018,12 @@ class Stringy
      *
      * @param int $offset
      * @param int|null $limit
+     * @param string|null $encoding
      * @return Stringy
      */
-    public function substring(int $offset, ?int $limit = null): self
+    public function substring(int $offset, ?int $limit = null, ?string $encoding = null): self
     {
-        $this->string = substr($this->string, $offset, $limit);
+        $this->string = mb_substr($this->string, $offset, $limit, $encoding);
         return $this;
     }
 
@@ -1164,465 +1154,95 @@ class Stringy
     }
 
     /**
-     * Returns start point for next regular expression match.
-     *
-     * @return int
-     */
-    public function mb_ereg_search_getpos()
-    {
-        return mb_ereg_search_getpos($this->string);
-        return $this;
-    }
-
-    /**
-     * Retrieve the result from the last multibyte regular expression match.
-     *
-     * @return false|string[]
-     */
-    public function mb_ereg_search_getregs()
-    {
-        return mb_ereg_search_getregs($this->string);
-        return $this;
-    }
-
-    /**
-     * Setup string and regular expression for a multibyte regular expression match.
-     *
-     * @return bool
-     */
-    public function mb_ereg_search_init()
-    {
-        return mb_ereg_search_init($this->string);
-        return $this;
-    }
-
-    /**
-     * Returns position and length of a matched part of the multibyte regular expression for a predefined multibyte string.
-     *
-     * @return false|int[]
-     */
-    public function mb_ereg_search_pos()
-    {
-        return mb_ereg_search_pos($this->string);
-        return $this;
-    }
-
-    /**
-     * Returns the matched part of a multibyte regular expression.
-     *
-     * @return false|string[]
-     */
-    public function mb_ereg_search_regs()
-    {
-        return mb_ereg_search_regs($this->string);
-        return $this;
-    }
-
-    /**
-     * Set start point of next regular expression match.
-     *
-     * @return bool
-     */
-    public function mb_ereg_search_setpos()
-    {
-        return mb_ereg_search_setpos($this->string);
-        return $this;
-    }
-
-    /**
-     * Multibyte regular expression match for predefined multibyte string.
-     *
-     * @return bool
-     */
-    public function mb_ereg_search()
-    {
-        return mb_ereg_search($this->string);
-        return $this;
-    }
-
-    /**
      * Regular expression match with multibyte support.
      *
+     * @param string $pattern
+     * @param array|null $regs
      * @return int
      */
-    public function mb_ereg()
+    public function ereg(string $pattern, ?array $regs = null): int
     {
-        return mb_ereg($this->string);
-        return $this;
+        return mb_ereg($pattern, $this->string, $regs);
     }
 
     /**
      * Replace regular expression with multibyte support ignoring case.
      *
-     * @return false|string
+     * @param string $pattern
+     * @param string $replace
+     * @param string $option
+     * @return Stringy
      */
-    public function mb_eregi_replace()
+    public function eregReplaceCaseInsensitive(string $pattern, string $replace, string $option = 'msr'): self
     {
-        return mb_eregi_replace($this->string);
+        $this->string = mb_eregi_replace($pattern, $replace, $this->string, $option);
         return $this;
     }
 
     /**
      * Regular expression match ignoring case with multibyte support.
      *
+     * @param string $pattern
+     * @param array|null $regs
      * @return int
      */
-    public function mb_eregi()
+    public function eregCaseInsensitive(string $pattern, ?array $regs = null): int
     {
-        return mb_eregi($this->string);
-        return $this;
+        return mb_eregi($pattern, $this->string, $regs);
     }
 
     /**
-     * Get internal settings of mbstring.
+     * Replaces ill-formed multi-byte characters with question marks.
      *
-     * @return array|mixed
+     * @param string|null $encoding
+     * @return Stringy
      */
-    public function mb_get_info()
+    public function scrub(?string $encoding = null): self
     {
-        return mb_get_info($this->string);
-        return $this;
-    }
-
-    /**
-     * Detect HTTP input character encoding.
-     *
-     * @return false|string
-     */
-    public function mb_http_input()
-    {
-        return mb_http_input($this->string);
-        return $this;
-    }
-
-    /**
-     * Set/Get HTTP output character encoding.
-     *
-     * @return bool|string
-     */
-    public function mb_http_output()
-    {
-        return mb_http_output($this->string);
-        return $this;
-    }
-
-    /**
-     * Set/Get internal character encoding.
-     *
-     * @return bool|string
-     */
-    public function mb_internal_encoding()
-    {
-        return mb_internal_encoding($this->string);
-        return $this;
-    }
-
-    /**
-     * Set/Get current language.
-     *
-     * @return bool|string
-     */
-    public function mb_language()
-    {
-        return mb_language($this->string);
-        return $this;
-    }
-
-    /**
-     * Returns an array of all supported encodings.
-     *
-     * @return string[]
-     */
-    public function mb_list_encodings()
-    {
-        return mb_list_encodings($this->string);
-        return $this;
-    }
-
-    /**
-     * Get code point of character.
-     *
-     * @return false|int
-     */
-    public function mb_ord()
-    {
-        return mb_ord($this->string);
-        return $this;
-    }
-
-    /**
-     * Callback function converts character encoding in output buffer.
-     *
-     * @return string
-     */
-    public function mb_output_handler()
-    {
-        return mb_output_handler($this->string);
-        return $this;
-    }
-
-    /**
-     * Parse GET/POST/COOKIE data and set global variable.
-     *
-     * @return bool
-     */
-    public function mb_parse_str()
-    {
-        return mb_parse_str($this->string);
-        return $this;
-    }
-
-    /**
-     * Get MIME charset string.
-     *
-     * @return string
-     */
-    public function mb_preferred_mime_name()
-    {
-        return mb_preferred_mime_name($this->string);
-        return $this;
-    }
-
-    /**
-     * Set/Get character encoding for multibyte regex.
-     *
-     * @return bool|string
-     */
-    public function mb_regex_encoding()
-    {
-        return mb_regex_encoding($this->string);
-        return $this;
-    }
-
-    /**
-     * Set/Get the default options for mbregex functions.
-     *
-     * @return string
-     */
-    public function mb_regex_set_options()
-    {
-        return mb_regex_set_options($this->string);
-        return $this;
-    }
-
-    /**
-     * Description.
-     *
-     * @return false|string
-     */
-    public function mb_scrub()
-    {
-        return mb_scrub($this->string);
-        return $this;
-    }
-
-    /**
-     * Send encoded mail.
-     *
-     * @return bool
-     */
-    public function mb_send_mail()
-    {
-        return mb_send_mail($this->string);
+        $this->string = mb_scrub($this->string, $encoding);
         return $this;
     }
 
     /**
      * Split multibyte string using regular expression.
      *
+     * @param string $pattern
+     * @param int $limit
      * @return string[]
      */
-    public function mb_split()
+    public function splitByRegularExpression(string $pattern, int $limit = -1): array
     {
-        return mb_split($this->string);
-        return $this;
-    }
-
-    /**
-     * Get part of string.
-     *
-     * @return string
-     */
-    public function mb_strcut()
-    {
-        return mb_strcut($this->string);
-        return $this;
+        return mb_split($pattern, $this->string, $limit);
     }
 
     /**
      * Get truncated string with specified width.
      *
-     * @return string
+     * @param int $start
+     * @param int $length
+     * @param string $trimmer
+     * @param string|null $encoding
+     * @return Stringy
      */
-    public function mb_strimwidth()
-    {
-        return mb_strimwidth($this->string);
-        return $this;
-    }
-
-    /**
-     * Finds position of first occurrence of a string within another, case insensitive.
-     *
-     * @return false|int
-     */
-    public function mb_stripos()
-    {
-        return mb_stripos($this->string);
-        return $this;
-    }
-
-    /**
-     * Finds first occurrence of a string within another, case insensitive.
-     *
-     * @return false|string
-     */
-    public function mb_stristr()
-    {
-        return mb_stristr($this->string);
-        return $this;
-    }
-
-    /**
-     * Get string length.
-     *
-     * @return int
-     */
-    public function mb_strlen()
-    {
-        return mb_strlen($this->string);
-        return $this;
-    }
-
-    /**
-     * Find position of first occurrence of string in a string.
-     *
-     * @return false|int
-     */
-    public function mb_strpos()
-    {
-        return mb_strpos($this->string);
-        return $this;
-    }
-
-    /**
-     * Finds the last occurrence of a character in a string within another.
-     *
-     * @return false|string
-     */
-    public function mb_strrchr()
-    {
-        return mb_strrchr($this->string);
-        return $this;
-    }
-
-    /**
-     * Finds the last occurrence of a character in a string within another, case insensitive.
-     *
-     * @return false|string
-     */
-    public function mb_strrichr()
-    {
-        return mb_strrichr($this->string);
-        return $this;
-    }
-
-    /**
-     * Finds position of last occurrence of a string within another, case insensitive.
-     *
-     * @return false|int
-     */
-    public function mb_strripos()
-    {
-        return mb_strripos($this->string);
-        return $this;
-    }
-
-    /**
-     * Find position of last occurrence of a string in a string.
-     *
-     * @return false|int
-     */
-    public function mb_strrpos()
-    {
-        return mb_strrpos($this->string);
-        return $this;
-    }
-
-    /**
-     * Finds first occurrence of a string within another.
-     *
-     * @return false|string
-     */
-    public function mb_strstr()
-    {
-        return mb_strstr($this->string);
-        return $this;
-    }
-
-    /**
-     * Make a string lowercase.
-     *
-     * @return string
-     */
-    public function mb_strtolower()
-    {
-        return mb_strtolower($this->string);
-        return $this;
-    }
-
-    /**
-     * Make a string uppercase.
-     *
-     * @return string
-     */
-    public function mb_strtoupper()
-    {
-        return mb_strtoupper($this->string);
+    public function trimToLengthWithTrimmer(
+        int $start,
+        int $length,
+        string $trimmer = '...',
+        ?string $encoding = null
+    ): self {
+        $this->string = mb_strimwidth($this->string, $start, $length, $trimmer, $encoding ?: mb_internal_encoding());
         return $this;
     }
 
     /**
      * Return width of string.
      *
+     * @param string|null $encoding
      * @return int
      */
-    public function mb_strwidth()
+    public function monotypeWidth(?string $encoding = null): int
     {
-        return mb_strwidth($this->string);
-        return $this;
-    }
-
-    /**
-     * Set/Get substitution character.
-     *
-     * @return bool|int|string
-     */
-    public function mb_substitute_character()
-    {
-        return mb_substitute_character($this->string);
-        return $this;
-    }
-
-    /**
-     * Count the number of substring occurrences.
-     *
-     * @return int
-     */
-    public function mb_substr_count()
-    {
-        return mb_substr_count($this->string);
-        return $this;
-    }
-
-    /**
-     * Get part of string.
-     *
-     * @return string
-     */
-    public function mb_substr()
-    {
-        return mb_substr($this->string);
-        return $this;
+        return mb_strwidth($this->string, $encoding ?: mb_internal_encoding());
     }
 
     // regular expressions
