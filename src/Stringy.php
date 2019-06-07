@@ -60,6 +60,7 @@ final class Stringy
 
     /**
      * @param string $string
+     *
      * @return Stringy
      */
     public function concat(string $string): self
@@ -70,6 +71,7 @@ final class Stringy
 
     /**
      * @param self $comparison
+     *
      * @return bool
      */
     public function sameAs(self $comparison): bool
