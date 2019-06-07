@@ -58,6 +58,16 @@ final class Stringy
         return $this->string;
     }
 
+    /**
+     * @param string $string
+     * @return Stringy
+     */
+    public function concat(string $string): self
+    {
+        $this->string .= $string;
+        return $this;
+    }
+
     // standard functions
 
     /**
