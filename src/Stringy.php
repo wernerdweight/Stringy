@@ -68,6 +68,15 @@ final class Stringy
         return $this;
     }
 
+    /**
+     * @param self $comparison
+     * @return bool
+     */
+    public function sameAs(self $comparison): bool
+    {
+        return $this->__toString() === $comparison->__toString();
+    }
+
     // standard functions
 
     /**
