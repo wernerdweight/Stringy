@@ -780,7 +780,7 @@ final class Stringy
      */
     public function getMatchedSubstringCaseInsensitive(
         string $substring,
-        ?bool $beforeNeedle = false,
+        bool $beforeNeedle = false,
         ?string $encoding = null
     ): ?string {
         return mb_stristr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding()) ?: null;
@@ -1226,7 +1226,11 @@ final class Stringy
     public function eregReplaceCallback(string $pattern, callable $callback, string $option = 'msr'): self
     {
         $args = [$pattern, $callback, $this->string, $option];
-        $this->string = mb_ereg_replace_callback(...$args);
+        $replacedString = mb_ereg_replace_callback(...$args);
+        if (false === $replacedString) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        $this->string = $replacedString;
         return $this;
     }
 
@@ -1241,7 +1245,11 @@ final class Stringy
      */
     public function eregReplace(string $pattern, string $replacement, string $option = 'msr'): self
     {
-        $this->string = mb_ereg_replace($pattern, $replacement, $this->string, $option);
+        $replacedString = mb_ereg_replace($pattern, $replacement, $this->string, $option);
+        if (false === $replacedString) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        $this->string = $replacedString;
         return $this;
     }
 
@@ -1255,7 +1263,11 @@ final class Stringy
      */
     public function ereg(string $pattern, ?array $regs = null): int
     {
-        return mb_ereg($pattern, $this->string, $regs);
+        $match = mb_ereg($pattern, $this->string, $regs);
+        if (false === $match) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        return $match;
     }
 
     /**
@@ -1269,7 +1281,11 @@ final class Stringy
      */
     public function eregReplaceCaseInsensitive(string $pattern, string $replace, string $option = 'msr'): self
     {
-        $this->string = mb_eregi_replace($pattern, $replace, $this->string, $option);
+        $replacedString = mb_eregi_replace($pattern, $replace, $this->string, $option);
+        if (false === $replacedString) {
+            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
+        }
+        $this->string = $replacedString;
         return $this;
     }
 
