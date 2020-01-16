@@ -171,10 +171,12 @@ final class Stringy
      * Decode a uuencoded string.
      *
      * @return Stringy
+     *
+     * @throws StringsException
      */
     public function uudecode(): self
     {
-        $this->string = convert_uudecode($this->string);
+        $this->string = \Safe\convert_uudecode($this->string);
         return $this;
     }
 
@@ -182,10 +184,12 @@ final class Stringy
      * Uuencode a string.
      *
      * @return Stringy
+     *
+     * @throws StringsException
      */
     public function uuencode(): self
     {
-        $this->string = convert_uuencode($this->string);
+        $this->string = \Safe\convert_uuencode($this->string);
         return $this;
     }
 
@@ -274,10 +278,12 @@ final class Stringy
      * @param string|null $charset
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\InfoException
      */
     public function decodeHtmlEntities(int $quoteStyle = ENT_COMPAT | ENT_HTML401, ?string $charset = null): self
     {
-        $this->string = html_entity_decode($this->string, $quoteStyle, $charset ?: (string)ini_get('default_charset'));
+        $this->string = html_entity_decode($this->string, $quoteStyle, $charset ?: \Safe\ini_get('default_charset'));
         return $this;
     }
 
@@ -289,6 +295,8 @@ final class Stringy
      * @param bool        $doubleEncode
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\InfoException
      */
     public function encodeHtmlEntities(
         int $quoteStyle = ENT_COMPAT | ENT_HTML401,
@@ -298,7 +306,7 @@ final class Stringy
         $this->string = htmlentities(
             $this->string,
             $quoteStyle,
-            $charset ?: (string)ini_get('default_charset'),
+            $charset ?: \Safe\ini_get('default_charset'),
             $doubleEncode
         );
         return $this;
@@ -397,10 +405,12 @@ final class Stringy
      * @param int $phonemes
      *
      * @return Stringy
+     *
+     * @throws StringsException
      */
     public function metaphone(int $phonemes = 0): self
     {
-        $this->string = metaphone($this->string, $phonemes);
+        $this->string = \Safe\metaphone($this->string, $phonemes);
         return $this;
     }
 
@@ -419,11 +429,15 @@ final class Stringy
 
     /**
      * Parses the string into variables.
+     *
+     * @return string[]
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function parseIntoVariables(): array
     {
         $variables = [];
-        mb_parse_str($this->string, $variables);
+        \Safe\mb_parse_str($this->string, $variables);
         return $variables;
     }
 
@@ -502,10 +516,12 @@ final class Stringy
      * Calculate the soundex key of a string.
      *
      * @return Stringy
+     *
+     * @throws StringsException
      */
     public function soundex(): self
     {
-        $this->string = soundex($this->string);
+        $this->string = \Safe\soundex($this->string);
         return $this;
     }
 
@@ -531,7 +547,7 @@ final class Stringy
      * @param string $enclosure
      * @param string $escape
      *
-     * @return array
+     * @return string[]
      */
     public function getCsv(string $delimiter = ',', string $enclosure = '"', string $escape = '\\'): array
     {
@@ -749,13 +765,20 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return int|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getPositionOfSubstringCaseInsensitive(
         string $substring,
         int $offset = 0,
         ?string $encoding = null
     ): ?int {
-        return mb_stripos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding()) ?: null;
+        return mb_stripos(
+            $this->string,
+            $substring,
+            $offset,
+            $encoding ?: (string)\Safe\mb_internal_encoding()
+        ) ?: null;
     }
 
     /**
@@ -777,13 +800,20 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return string|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getMatchedSubstringCaseInsensitive(
         string $substring,
         bool $beforeNeedle = false,
         ?string $encoding = null
     ): ?string {
-        return mb_stristr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding()) ?: null;
+        return mb_stristr(
+            $this->string,
+            $substring,
+            $beforeNeedle,
+            $encoding ?: (string)\Safe\mb_internal_encoding()
+        ) ?: null;
     }
 
     /**
@@ -792,10 +822,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return int
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function length(?string $encoding = null): int
     {
-        $result = mb_strlen($this->string, $encoding ?: mb_internal_encoding());
+        $result = mb_strlen($this->string, $encoding ?: (string)\Safe\mb_internal_encoding());
         if (false === $result) {
             throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
         }
@@ -872,10 +904,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return int|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getPositionOfSubstring(string $substring, int $offset = 0, ?string $encoding = null): ?int
     {
-        $position = mb_strpos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
+        $position = mb_strpos($this->string, $substring, $offset, $encoding ?: (string)\Safe\mb_internal_encoding());
         if (false === $position) {
             return null;
         }
@@ -890,13 +924,15 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return string|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getLastOccuranceOfCharacter(
         string $character,
         bool $part = false,
         ?string $encoding = null
     ): ?string {
-        return mb_strrchr($this->string, $character, $part, $encoding ?: mb_internal_encoding()) ?: null;
+        return mb_strrchr($this->string, $character, $part, $encoding ?: (string)\Safe\mb_internal_encoding()) ?: null;
     }
 
     /**
@@ -907,13 +943,15 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return string|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getLastOccuranceOfCharacterCaseInsensitive(
         string $character,
         bool $part = false,
         ?string $encoding = null
     ): ?string {
-        return mb_strrichr($this->string, $character, $part, $encoding ?: mb_internal_encoding()) ?: null;
+        return mb_strrichr($this->string, $character, $part, $encoding ?: (string)\Safe\mb_internal_encoding()) ?: null;
     }
 
     /**
@@ -935,13 +973,15 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return int|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getPositionOfLastSubstringCaseInsensitive(
         string $substring,
         int $offset = 0,
         ?string $encoding = null
     ): ?int {
-        $position = mb_strripos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
+        $position = mb_strripos($this->string, $substring, $offset, $encoding ?: (string)\Safe\mb_internal_encoding());
         if (false === $position) {
             return null;
         }
@@ -956,10 +996,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return int|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getPositionOfLastSubstring(string $substring, int $offset = 0, ?string $encoding = null): ?int
     {
-        $position = mb_strrpos($this->string, $substring, $offset, $encoding ?: mb_internal_encoding());
+        $position = mb_strrpos($this->string, $substring, $offset, $encoding ?: (string)\Safe\mb_internal_encoding());
         if (false === $position) {
             return null;
         }
@@ -974,13 +1016,20 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return string|null
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getMatchedSubstring(
         string $substring,
         bool $beforeNeedle = false,
         ?string $encoding = null
     ): ?string {
-        return mb_strstr($this->string, $substring, $beforeNeedle, $encoding ?: mb_internal_encoding()) ?: null;
+        return mb_strstr(
+            $this->string,
+            $substring,
+            $beforeNeedle,
+            $encoding ?: (string)\Safe\mb_internal_encoding()
+        ) ?: null;
     }
 
     /**
@@ -1006,10 +1055,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function toLowercase(?string $encoding = null): self
     {
-        $this->string = mb_strtolower($this->string, $encoding ?: mb_internal_encoding());
+        $this->string = mb_strtolower($this->string, $encoding ?: (string)\Safe\mb_internal_encoding());
         return $this;
     }
 
@@ -1019,10 +1070,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function toUppercase(?string $encoding = null): self
     {
-        $this->string = mb_strtoupper($this->string, $encoding ?: mb_internal_encoding());
+        $this->string = mb_strtoupper($this->string, $encoding ?: (string)\Safe\mb_internal_encoding());
         return $this;
     }
 
@@ -1073,10 +1126,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return int
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getNumberOfSubstringOccurances(string $substring, ?string $encoding = null): int
     {
-        return mb_substr_count($this->string, $substring, $encoding ?: mb_internal_encoding());
+        return mb_substr_count($this->string, $substring, $encoding ?: (string)\Safe\mb_internal_encoding());
     }
 
     /**
@@ -1102,10 +1157,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function substring(int $offset, ?int $limit = null, ?string $encoding = null): self
     {
-        $this->string = mb_substr($this->string, $offset, $limit, $encoding ?: mb_internal_encoding());
+        $this->string = mb_substr($this->string, $offset, $limit, $encoding ?: (string)\Safe\mb_internal_encoding());
         return $this;
     }
 
@@ -1169,10 +1226,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return bool
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function checkEncoding(?string $encoding = null): bool
     {
-        return mb_check_encoding($this->string, $encoding ?: mb_internal_encoding());
+        return mb_check_encoding($this->string, $encoding ?: (string)\Safe\mb_internal_encoding());
     }
 
     /**
@@ -1192,7 +1251,7 @@ final class Stringy
     /**
      * Detect character encoding.
      *
-     * @param array|null $encodingList
+     * @param string[]|null $encodingList
      *
      * @return string|null
      */
@@ -1222,15 +1281,13 @@ final class Stringy
      * @param string   $option
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function eregReplaceCallback(string $pattern, callable $callback, string $option = 'msr'): self
     {
         $args = [$pattern, $callback, $this->string, $option];
-        $replacedString = mb_ereg_replace_callback(...$args);
-        if (false === $replacedString) {
-            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
-        }
-        $this->string = $replacedString;
+        $this->string = \Safe\mb_ereg_replace_callback(...$args);
         return $this;
     }
 
@@ -1242,22 +1299,20 @@ final class Stringy
      * @param string $option
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function eregReplace(string $pattern, string $replacement, string $option = 'msr'): self
     {
-        $replacedString = mb_ereg_replace($pattern, $replacement, $this->string, $option);
-        if (false === $replacedString) {
-            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
-        }
-        $this->string = $replacedString;
+        $this->string = \Safe\mb_ereg_replace($pattern, $replacement, $this->string, $option);
         return $this;
     }
 
     /**
      * Regular expression match with multibyte support.
      *
-     * @param string     $pattern
-     * @param array|null $regs
+     * @param string        $pattern
+     * @param string[]|null $regs
      *
      * @return int
      */
@@ -1278,22 +1333,20 @@ final class Stringy
      * @param string $option
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function eregReplaceCaseInsensitive(string $pattern, string $replace, string $option = 'msr'): self
     {
-        $replacedString = mb_eregi_replace($pattern, $replace, $this->string, $option);
-        if (false === $replacedString) {
-            throw new StringyException(StringyException::EXCEPTION_UNEXPECTED_RESULT);
-        }
-        $this->string = $replacedString;
+        $this->string = \Safe\mb_eregi_replace($pattern, $replace, $this->string, $option);
         return $this;
     }
 
     /**
      * Regular expression match ignoring case with multibyte support.
      *
-     * @param string     $pattern
-     * @param array|null $regs
+     * @param string        $pattern
+     * @param string[]|null $regs
      *
      * @return int
      */
@@ -1308,10 +1361,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function scrub(?string $encoding = null): self
     {
-        $this->string = mb_scrub($this->string, $encoding ?: mb_internal_encoding());
+        $this->string = mb_scrub($this->string, $encoding ?: (string)\Safe\mb_internal_encoding());
         return $this;
     }
 
@@ -1322,10 +1377,12 @@ final class Stringy
      * @param int    $limit
      *
      * @return string[]
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function splitByRegularExpression(string $pattern, int $limit = -1): array
     {
-        return mb_split($pattern, $this->string, $limit);
+        return \Safe\mb_split($pattern, $this->string, $limit);
     }
 
     /**
@@ -1337,6 +1394,8 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return Stringy
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function trimToLengthWithTrimmer(
         int $start,
@@ -1344,7 +1403,13 @@ final class Stringy
         string $trimmer = '...',
         ?string $encoding = null
     ): self {
-        $this->string = mb_strimwidth($this->string, $start, $length, $trimmer, $encoding ?: mb_internal_encoding());
+        $this->string = mb_strimwidth(
+            $this->string,
+            $start,
+            $length,
+            $trimmer,
+            $encoding ?: (string)\Safe\mb_internal_encoding()
+        );
         return $this;
     }
 
@@ -1354,10 +1419,12 @@ final class Stringy
      * @param string|null $encoding
      *
      * @return int
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function monotypeWidth(?string $encoding = null): int
     {
-        return mb_strwidth($this->string, $encoding ?: mb_internal_encoding());
+        return mb_strwidth($this->string, $encoding ?: (string)\Safe\mb_internal_encoding());
     }
 
     // regular expressions
@@ -1384,12 +1451,14 @@ final class Stringy
      * @param int    $flags
      * @param int    $offset
      *
-     * @return array
+     * @return string[]
+     *
+     * @throws PcreException
      */
     public function pregGetAllMatches(string $pattern, int $flags = PREG_PATTERN_ORDER, int $offset = 0): array
     {
         $matches = [];
-        preg_match_all($pattern, $this->string, $matches, $flags, $offset);
+        \Safe\preg_match_all($pattern, $this->string, $matches, $flags, $offset);
         return $matches;
     }
 
@@ -1430,8 +1499,8 @@ final class Stringy
     /**
      * Perform a regular expression search and replace using callbacks.
      *
-     * @param array $patternsAndCallbacks
-     * @param int   $limit
+     * @param mixed[] $patternsAndCallbacks
+     * @param int     $limit
      *
      * @return Stringy
      */
@@ -1487,7 +1556,7 @@ final class Stringy
      * @param string $pattern
      * @param int    $limit
      *
-     * @return array
+     * @return string[]
      *
      * @throws PcreException
      */
@@ -1502,6 +1571,8 @@ final class Stringy
      * @param string $substring
      *
      * @return int[]
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function getPositionsOfSubstring(string $substring): array
     {
@@ -1549,6 +1620,8 @@ final class Stringy
      * @param string $from
      *
      * @return Stringy
+     *
+     * @throws PcreException
      */
     private function toKebab(string $from): self
     {
@@ -1568,6 +1641,9 @@ final class Stringy
      * @param string $to
      *
      * @return Stringy
+     *
+     * @throws PcreException
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function convertCase(string $from, string $to): self
     {
@@ -1611,6 +1687,8 @@ final class Stringy
      * @param string $value
      *
      * @return string
+     *
+     * @throws \Safe\Exceptions\MbstringException
      */
     public function dotNotationToCamelCase(string $value): string
     {
