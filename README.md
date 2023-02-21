@@ -3,7 +3,7 @@ Stringy
 
 PHP Stringy object with consistent and predictable API
 
-[![Build Status](https://travis-ci.org/wernerdweight/Stringy.svg?branch=master)](https://travis-ci.org/wernerdweight/Stringy)
+[![Build Status](https://app.travis-ci.com/wernerdweight/Stringy.svg?branch=master)](https://app.travis-ci.com/wernerdweight/Stringy)
 [![Latest Stable Version](https://poser.pugx.org/wernerdweight/stringy/v/stable)](https://packagist.org/packages/wernerdweight/stringy)
 [![Total Downloads](https://poser.pugx.org/wernerdweight/stringy/downloads)](https://packagist.org/packages/wernerdweight/stringy)
 [![License](https://poser.pugx.org/wernerdweight/stringy/license)](https://packagist.org/packages/wernerdweight/stringy)

@@ -1,2 +1,13 @@
 includes:
     - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
+    - vendor/wernerdweight/cs/src/Rules/phpstan-rules.neon
+
+parameters:
+    ignoreErrors:
+        - '#Do not use chained method calls. Put each on separated lines#'
+        - '#Use separate function calls with readable variable names#'
+        - '#Function "preg_replace_callback\(\)" cannot be used\/left in the code#'
+        - '#Make callable type explicit#'
+        - '#Spread operator is not allowed.#'
+        - '#Method "(sameAs|checkEncoding|ereg|eregMatch|eregCaseInsensitive|pregMatch)\(\)" returns bool type, so the name should start with is\/has\/was#'
+        - '#Parameters should use "[^"]+" types as the only types passed to this method#'
